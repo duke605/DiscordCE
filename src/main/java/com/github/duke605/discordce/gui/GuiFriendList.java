@@ -160,12 +160,20 @@ public class GuiFriendList extends GuiEmbeddedList
             // Deleting friend
             if (b.id == 0)
             {
+                String s;
+                if (relationship.type == Relationship.INCOMING)
+                    s = "Are you sure you want to ignore " + relationship.user.getUsername() + "'s friend request?";
+                else if (relationship.type == Relationship.OUTGOING)
+                    s = "Are you sure you want to cancel your friend request to " + relationship.user.getUsername() + "?";
+                else
+                    s = "Are you sure you want to unfriend " + relationship.user.getUsername() + "?";
+
                 mc.displayGuiScreen(new GuiYesNo((result, id) -> {
                     if (result)
                         DiscordUtil.deleteFriend(relationship.user.getId());
 
                     mc.displayGuiScreen(guiFriends);
-                }, "", "Are you sure you want to unfriend " + relationship.user.getUsername() + "?", 0));
+                }, "", s, 0));
             }
 
             // Adding friend
@@ -177,7 +185,12 @@ public class GuiFriendList extends GuiEmbeddedList
             // Unblock
             else if (b.id == 2)
             {
-                DiscordUtil.unblock(relationship.user.getId());
+                mc.displayGuiScreen(new GuiYesNo((result, id) -> {
+                    if (result)
+                        DiscordUtil.unblock(relationship.user.getId());
+
+                    mc.displayGuiScreen(guiFriends);
+                }, "", "Are you sure you want to unblock " + relationship.user.getUsername() + "?", 0));
             }
         }
     }
