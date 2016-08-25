@@ -53,85 +53,85 @@ public class Config {
         directLayout = instance.getString("directLayout"
                 , CATEGORY_DISPLAY
                 , "[DM] <%u>: %m"
-                , "How direct messages from DiscordCE will be displayed.\r\n\t" +
-                        "%u = The user the message originated from.\r\n\t" +
-                        "%m = The message.\r\n" +
+                , "How direct messages from DiscordCE will be displayed.\n\t" +
+                        "%u = The user the message originated from.\n\t" +
+                        "%m = The message.\n" +
                         "You may use colours as long as the do not wrap variables " +
                         "http://minecraft.gamepedia.com/Formatting_codes");
 
         serverLayout = instance.getString("serverlayout"
                 , CATEGORY_DISPLAY
                 , "[%s][%c] <%U>: %m"
-                , "How a message from a DiscordCE server/guild will be displayed.\r\n\t" +
-                        "%s = The server the message originated from.\r\n\t" +
-                        "%c = The channel the message originated from.\r\n\t" +
-                        "%u = The user the message originated from. (This might make it harder to mention someone)\r\n\t" +
-                        "%U = The user the message originated from. (Their username not their nick)\r\n\t" +
-                        "%m = The message.\r\n" +
+                , "How a message from a DiscordCE server/guild will be displayed.\n\t" +
+                        "%s = The server the message originated from.\n\t" +
+                        "%c = The channel the message originated from.\n\t" +
+                        "%u = The user the message originated from. (This might make it harder to mention someone)\n\t" +
+                        "%U = The user the message originated from. (Their username not their nick)\n\t" +
+                        "%m = The message.\n" +
                         "You may use colours as long as the do not wrap variables " +
                         "http://minecraft.gamepedia.com/Formatting_codes");
 
         String[] sno = instance.getStringList("serverOverrides"
                 , CATEGORY_DISPLAY
                 , new String[0]
-                , "If a server name is too long and takes up a lot of space when displayed you may override it by\r\n" +
-                        "placing an override in the list below. For example if you have a server with the name\r\n" +
-                        "\"Very long and annoying name\" and want to change it to \"VLAN\" when displayed put\r\n" +
+                , "If a server name is too long and takes up a lot of space when displayed you may override it by\n" +
+                        "placing an override in the list below. For example if you have a server with the name\n" +
+                        "\"Very long and annoying name\" and want to change it to \"VLAN\" when displayed put\n" +
                         "\"Very long and annoying name::VLAN\" in the list.");
 
         String[] cno = instance.getStringList("channelOverrides"
                 , CATEGORY_DISPLAY
                 , new String[0]
-                , "If a channel name is too long and takes up a lot of space when displayed you may override it by\r\n" +
-                        "placing an override in the list below. For example if you have a channel with the name\r\n" +
-                        "\"Very long and annoying name\" and want to change it to \"VLAN\" when displayed put\r\n" +
+                , "If a channel name is too long and takes up a lot of space when displayed you may override it by\n" +
+                        "placing an override in the list below. For example if you have a channel with the name\n" +
+                        "\"Very long and annoying name\" and want to change it to \"VLAN\" when displayed put\n" +
                         "\"Very long and annoying name::VLAN\" in the list.");
 
         friendColour = instance.getString("friendColour"
                 , CATEGORY_COLOUR
                 , "5"
-                , "When a friend sends a message their name will be displayed in a different colour\r\n" +
-                        "so they are easily distinguished. Use http://minecraft.gamepedia.com/Formatting_codes\r\n" +
+                , "When a friend sends a message their name will be displayed in a different colour\n" +
+                        "so they are easily distinguished. Use http://minecraft.gamepedia.com/Formatting_codes\n" +
                         "to help find supported colours.");
 
         mentionColour = instance.getString("mentionColour"
                 , CATEGORY_COLOUR
                 , "9"
-                , "When a channel, role, or user is mentioned the mention will be highlighted so you can clearly\r\n" +
-                        "distinguish it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes\r\n" +
+                , "When a channel, role, or user is mentioned the mention will be highlighted so you can clearly\n" +
+                        "distinguish it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes\n" +
                         "to help find supported colours.");
 
         serverColour = instance.getString("serverColour"
                 , CATEGORY_COLOUR
                 , "2"
-                , "When a message is displayed the server it came from can be coloured so you can clearly distinguish\r\n" +
-                        "it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes to help\r\n" +
+                , "When a message is displayed the server it came from can be coloured so you can clearly distinguish\n" +
+                        "it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes to help\n" +
                         "find supported colours.");
 
         channelColour = instance.getString("channelColour"
                 , CATEGORY_COLOUR
                 , "a"
-                , "When a message is displayed the channel it came from can be coloured so you can clearly distinguish\r\n" +
-                        "it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes to help\r\n" +
+                , "When a message is displayed the channel it came from can be coloured so you can clearly distinguish\n" +
+                        "it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes to help\n" +
                         "find supported colours.");
 
         userColour = instance.getString("userColour"
                 , CATEGORY_COLOUR
                 , "7"
-                , "When a message is displayed the user it came from can be coloured so you can clearly distinguish\r\n" +
-                        "it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes to help\r\n" +
+                , "When a message is displayed the user it came from can be coloured so you can clearly distinguish\n" +
+                        "it from the rest of the message. Use http://minecraft.gamepedia.com/Formatting_codes to help\n" +
                         "find supported colours.");
 
         deathMessages = instance.getBoolean("deathMessages"
                 , Configuration.CATEGORY_GENERAL
                 , false
-                , "When you die a message will be sent to the channel you are currently talking to if this value is\r\n" +
+                , "When you die a message will be sent to the channel you are currently talking to if this value is\n" +
                         "set to true.");
 
         achievementMessages = instance.getBoolean("achievementMessages"
                 , Configuration.CATEGORY_GENERAL
                 , false
-                , "When an achievement is unlocked a message will be sent to the channel you are currently talking to\r\n" +
+                , "When an achievement is unlocked a message will be sent to the channel you are currently talking to\n" +
                         "if this value is set to true.");
 
         // Separating server overrides
