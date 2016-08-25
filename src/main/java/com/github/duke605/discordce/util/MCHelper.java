@@ -161,7 +161,7 @@ public class MCHelper {
 
         if (g != null)
             server = new JSONObject()
-                    .put("text", colourServer(g.getName()))
+                    .put("text", colourServer(DiscordUtil.overrideServerName(g.getName())))
                     .put("insertion", g.getId())
                     .put("hoverEvent", new JSONObject()
                         .put("action", "show_text")
@@ -171,7 +171,7 @@ public class MCHelper {
 
         if (c != null)
             channel = new JSONObject()
-                    .put("text", colourChannel(c.getName()))
+                    .put("text", colourChannel(DiscordUtil.overrideChannelName(c.getName())))
                     .put("insertion", c.getId())
                     .put("clickEvent", new JSONObject()
                         .put("action", "run_command")
