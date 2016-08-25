@@ -98,7 +98,7 @@ public class DiscordEventHandler extends CustomListenerAdapter {
 
         // Formatting message
         message = MCHelper.buildInteractiveMessage(
-                e.getAuthorName()
+                e.getAuthor().getUsername()
                 , e.getAuthorNick()
                 , e.getAuthor().getId()
                 , e.getGuild()
