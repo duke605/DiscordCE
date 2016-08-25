@@ -204,7 +204,7 @@ public class MCHelper {
                     .replace("%c", "\"," + channel + ",\"")
                     .replace("%s", "\"," + server + ",\"")
                     .replace("%U", "\"," + username + ",\"")
-                    .replace("%u", "\"," + nickname + ",\"")
+                    .replace("%u", "\"," + (nick == null ? username : nickname) + ",\"")
                     .replace("%m", StringEscapeUtils.escapeJson(message));
         else
             template = StringEscapeUtils.escapeJson(template)
