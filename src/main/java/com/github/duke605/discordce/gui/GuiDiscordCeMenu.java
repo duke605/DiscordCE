@@ -22,6 +22,7 @@ public class GuiDiscordCeMenu extends GuiScreen
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 48 + -16, 98, 20, "Guilds"));
         this.buttonList.add(new GuiButton(1, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, "Friends"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 72 + -16, "Configurations"));
+        this.buttonList.add(new GuiButton(3, this.width / 2 - 100, this.height / 4 + 96 + -16, "Configurations"));
     }
 
     @Override
