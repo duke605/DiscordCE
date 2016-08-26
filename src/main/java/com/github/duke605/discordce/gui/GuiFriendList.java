@@ -7,11 +7,11 @@ import com.github.duke605.discordce.gui.abstraction.GuiListButton;
 import com.github.duke605.discordce.lib.VolatileSettings;
 import com.github.duke605.discordce.util.Arrays;
 import com.github.duke605.discordce.util.DiscordUtil;
+import com.github.duke605.discordce.util.DrawingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,52 +30,39 @@ public class GuiFriendList extends GuiEmbeddedList
                 , guiFriends.height
                 , 16 + mc.fontRendererObj.FONT_HEIGHT
                 , guiFriends.height - (16 + mc.fontRendererObj.FONT_HEIGHT)
-                , mc.fontRendererObj.FONT_HEIGHT + 16);
+                , 26);
         this.guiFriends = guiFriends;
         initList();
     }
 
     public void initList()
     {
-        // Clearing entries if there was some
-        if (entries != null)
-            this.entries.clear();
+        this.entries.clear();
 
-        if (VolatileSettings.relationships.entrySet().stream().anyMatch(r -> r.getValue().type == Relationship.FRIEND))
-        {
-            this.entries.add(new CategoryEntry(mc.fontRendererObj, "Friends"));
+        if (guiFriends.type == Relationship.FRIEND)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
                     .filter(r -> r.getValue().type == Relationship.FRIEND)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
-        }
 
-        if (VolatileSettings.relationships.entrySet().stream().anyMatch(r -> r.getValue().type == Relationship.OUTGOING))
-        {
-            this.entries.add(new CategoryEntry(mc.fontRendererObj, "Pending (Outgoing)"));
-            this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
-                    .filter(r -> r.getValue().type == Relationship.OUTGOING)
-                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
-                    .collect(Collectors.toList()));
-        }
-
-        if (VolatileSettings.relationships.entrySet().stream().anyMatch(r -> r.getValue().type == Relationship.INCOMING))
-        {
-            this.entries.add(new CategoryEntry(mc.fontRendererObj, "Pending (Incoming)"));
-            this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
-                    .filter(r -> r.getValue().type == Relationship.INCOMING)
-                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
-                    .collect(Collectors.toList()));
-        }
-
-        if (VolatileSettings.relationships.entrySet().stream().anyMatch(r -> r.getValue().type == Relationship.BLOCK))
-        {
-            this.entries.add(new CategoryEntry(mc.fontRendererObj, "Blocked"));
+        if (guiFriends.type == Relationship.BLOCK)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
                     .filter(r -> r.getValue().type == Relationship.BLOCK)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
-        }
+
+        if (guiFriends.type == Relationship.OUTGOING)
+            this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
+                    .filter(r -> r.getValue().type == Relationship.OUTGOING)
+                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
+                    .collect(Collectors.toList()));
+
+        if (guiFriends.type == Relationship.INCOMING || guiFriends.type == Relationship.OUTGOING)
+            this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
+                    .filter(r -> r.getValue().type == Relationship.INCOMING
+                            || r.getValue().type == Relationship.OUTGOING)
+                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
+                    .collect(Collectors.toList()));
     }
 
     @Override
@@ -127,31 +114,38 @@ public class GuiFriendList extends GuiEmbeddedList
                 button.drawButton(mc, mouseX, mouseY, x, y);
 
             // Status
-            String name;
+            long colour;
             switch (relationship.user.getOnlineStatus())
             {
                 case ONLINE:
-                    name = TextFormatting.GREEN + relationship.user.getUsername();
+                    colour = 0x43b581;
                     break;
 
                 case OFFLINE:
-                    name = TextFormatting.RED + relationship.user.getUsername();
+                    colour = 0x2e3136;
                     break;
 
                 case AWAY:
-                    name = TextFormatting.YELLOW + relationship.user.getUsername();
+                    colour = 0xfaa61a;
                     break;
 
                 default:
-                    name = TextFormatting.DARK_RED + relationship.user.getUsername();
+                    colour = 0xFF0000;
                     break;
             }
 
             // Username
-            this.fr.drawString(Arrays.truncate(name, 22)
+            this.fr.drawString(Arrays.truncate(relationship.user.getUsername(), 20)
                     , x - 100
                     , y + (height - this.fr.FONT_HEIGHT + 1) / 2
                     , 0xFFFFFF);
+
+            int xCoord = fr.getStringWidth(Arrays.truncate(relationship.user.getUsername(), 20));
+            DrawingUtils.drawScaledImage(x - 95 + xCoord, y + 8.5F, 0, 0, 10, 10, 0.5F, GuiFriends.indicator
+                    , (colour & 0xFF0000) >> 16
+                    , (colour & 0x00FF00) >> 8
+                    , colour & 0x0000FF
+                    , 10, 10);
         }
 
         @Override

@@ -9,6 +9,7 @@ import com.github.duke605.discordce.lib.Reference;
 import com.github.duke605.discordce.util.ConcurrentUtil;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
+import net.dv8tion.jda.utils.ApplicationUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -49,8 +50,8 @@ public class DiscordCE
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent e) {
-
+    public void init(FMLInitializationEvent e)
+    {
         // Connecting
         try
         {

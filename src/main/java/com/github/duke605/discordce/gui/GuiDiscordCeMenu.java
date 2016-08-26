@@ -20,7 +20,7 @@ public class GuiDiscordCeMenu extends GuiScreen
         buttonList.clear();
         this.buttonList.add(new GuiButton(-1, this.width / 2 - 100, this.height / 4 + 24 + -16, I18n.format("menu.returnToGame")));
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 48 + -16, 98, 20, "Guilds"));
-        this.buttonList.add(new GuiButton(1, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, "Friends"));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, "Relationships"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 72 + -16, "Configurations"));
     }
 

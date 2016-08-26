@@ -61,6 +61,13 @@ public class GuiServers extends GuiListContainer
         DiscordCE.client.addEventListener(listener);
         serverList = new GuiServerList(mc, this);
         buttonList.clear();
+        buttonList.add(new GuiButton(-1
+                , 10
+                , ((fontRendererObj.FONT_HEIGHT + 16)/2) - 9
+                , 40
+                , 20
+                , "< Back"));
+
         buttonList.add(new GuiListButton(0, (width / 2) - 100, height - ((fontRendererObj.FONT_HEIGHT + 16)/2) - 11, "Join"));
         buttonList.add(new GuiListButton(2
                 , (width / 2) - 100
@@ -90,8 +97,12 @@ public class GuiServers extends GuiListContainer
     @Override
     protected void actionPerformed(GuiButton b) throws IOException
     {
+        // Going back
+        if (b.id == -1)
+            mc.displayGuiScreen(parent);
+
         // Getting join link
-        if (b.id == 0)
+        else if (b.id == 0)
         {
             mc.displayGuiScreen(new GuiInput(link -> {
                 try
