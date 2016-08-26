@@ -9,7 +9,6 @@ import com.github.duke605.discordce.lib.Reference;
 import com.github.duke605.discordce.util.ConcurrentUtil;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
-import net.dv8tion.jda.utils.ApplicationUtil;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -78,7 +77,6 @@ public class DiscordCE
         ClientCommandHandler.instance.registerCommand(new CommandUnblock());
         ClientCommandHandler.instance.registerCommand(new CommandAddFriend());
         ClientCommandHandler.instance.registerCommand(new CommandDeleteFriend());
-        ClientCommandHandler.instance.registerCommand(new CommandListChannels());
         ClientCommandHandler.instance.registerCommand(new CommandFocus());
 
         ClientRegistry.registerKeyBinding(test = new KeyBinding("test", Keyboard.KEY_Y, "Testing"));

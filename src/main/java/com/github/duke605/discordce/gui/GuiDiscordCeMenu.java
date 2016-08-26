@@ -10,7 +10,9 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import org.apache.logging.log4j.Level;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 
 public class GuiDiscordCeMenu extends GuiScreen
 {
@@ -22,6 +24,7 @@ public class GuiDiscordCeMenu extends GuiScreen
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 48 + -16, 98, 20, "Guilds"));
         this.buttonList.add(new GuiButton(1, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, "Relationships"));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 72 + -16, "Configurations"));
+        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 96 + -16, "Report an Issue"));
     }
 
     @Override
@@ -62,6 +65,12 @@ public class GuiDiscordCeMenu extends GuiScreen
                 FMLLog.log(Level.ERROR, var5, "There was a critical issue trying to build the instance GUI for %s",
                         container.getModId());
             }
+        }
+
+        // Report issue
+        else if (b.id == 5)
+        {
+            Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE/issues"));
         }
     }
 }
