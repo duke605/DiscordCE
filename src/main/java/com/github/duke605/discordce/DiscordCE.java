@@ -79,7 +79,7 @@ public class DiscordCE
         ClientCommandHandler.instance.registerCommand(new CommandDeleteFriend());
         ClientCommandHandler.instance.registerCommand(new CommandFocus());
 
-        ClientRegistry.registerKeyBinding(test = new KeyBinding("test", Keyboard.KEY_Y, "Testing"));
+        ClientRegistry.registerKeyBinding(test = new KeyBinding("Open DiscordCE menu", Keyboard.KEY_Y, "DiscordCE"));
 
         MinecraftForge.EVENT_BUS.register(new MinecraftEventHandler());
     }
