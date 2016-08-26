@@ -78,6 +78,7 @@ public class DiscordCE
         ClientCommandHandler.instance.registerCommand(new CommandAddFriend());
         ClientCommandHandler.instance.registerCommand(new CommandDeleteFriend());
         ClientCommandHandler.instance.registerCommand(new CommandFocus());
+        ClientCommandHandler.instance.registerCommand(new CommandDM());
 
         ClientRegistry.registerKeyBinding(test = new KeyBinding("Open DiscordCE menu", Keyboard.KEY_Y, "DiscordCE"));
 

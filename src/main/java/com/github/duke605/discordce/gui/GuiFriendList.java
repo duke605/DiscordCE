@@ -9,9 +9,7 @@ import com.github.duke605.discordce.util.Arrays;
 import com.github.duke605.discordce.util.DiscordUtil;
 import com.github.duke605.discordce.util.DrawingUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +87,10 @@ public class GuiFriendList extends GuiEmbeddedList
 
             // Remove friend
             if (relationship.type == Relationship.FRIEND)
+            {
                 guiButtons.add(new GuiListButton(0, getListWidth() - 50, 0, 50, 20, "Unfriend"));
+                guiButtons.add(new GuiListButton(3, getListWidth() - 105, 0, 50, 20, "DM"));
+            }
 
             // Ignore request
             else if (relationship.type == Relationship.INCOMING)
@@ -185,6 +186,12 @@ public class GuiFriendList extends GuiEmbeddedList
 
                     mc.displayGuiScreen(guiFriends);
                 }, "", "Are you sure you want to unblock " + relationship.user.getUsername() + "?", 0));
+            }
+
+            // DM
+            else if (b.id == 3)
+            {
+                mc.displayGuiScreen(new GuiChat("/// " + relationship.user.getId() + " "));
             }
         }
     }

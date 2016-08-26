@@ -6,6 +6,7 @@ import com.github.duke605.discordce.util.Arrays;
 import com.github.duke605.discordce.util.MCHelper;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.impl.TextChannelImpl;
 import net.dv8tion.jda.exceptions.PermissionException;
 import net.dv8tion.jda.exceptions.RateLimitedException;
 import net.dv8tion.jda.exceptions.VerificationLevelException;
@@ -53,10 +54,6 @@ public class CommandChat extends CommandBase
         // Checking if user can send messages to the channel
         try {
             c.getTextChannelById(channelId).sendMessageAsync(message, null);
-        }
-        catch (RateLimitedException e)
-        {
-            MCHelper.sendMessage("§cYou have reached the rate limit. Please try again in a moment.");
         }
         catch (PermissionException e)
         {

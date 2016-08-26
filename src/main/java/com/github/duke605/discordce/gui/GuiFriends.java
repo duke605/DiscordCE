@@ -57,7 +57,7 @@ public class GuiFriends extends GuiListContainer
                 , "< Back"));
 
         buttonList.add(b = new GuiButton(Relationship.FRIEND
-                , width / 3 - 9
+                , width / 2 - 77
                 , height - 23
                 , 50
                 , 20
@@ -65,14 +65,14 @@ public class GuiFriends extends GuiListContainer
         b.enabled = false;
 
         buttonList.add(new GuiButton(3
-                , width / 3 + 53 - 9
+                , width / 2 - 25
                 , height - 23
                 , 50
                 , 20
                 , "Pending"));
 
         buttonList.add(new GuiButton(Relationship.BLOCK
-                , width / 3 + 106 - 9
+                , width / 2 + 27
                 , height - 23
                 , 50
                 , 20
