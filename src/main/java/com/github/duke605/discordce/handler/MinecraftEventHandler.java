@@ -7,13 +7,17 @@ import com.github.duke605.discordce.lib.Preferences;
 import com.github.duke605.discordce.lib.Reference;
 import com.github.duke605.discordce.util.ConcurrentUtil;
 import com.github.duke605.discordce.util.MCHelper;
+import net.dv8tion.jda.Permission;
+import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScreenChatOptions;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.Style;
+import net.minecraft.util.ScreenShotHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentBase;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -26,11 +30,14 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.json.JSONObject;
+
+import java.io.File;
 
 public class MinecraftEventHandler
 {
 
-    private static long lastTyping = 0;
+    private long lastTyping = 0;
 
      @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
@@ -87,7 +94,7 @@ public class MinecraftEventHandler
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
-    public void onPlayerDeath(LivingDeathEvent e)
+    public void onPlayerDeathMessage(LivingDeathEvent e)
     {
         if (!Config.deathMessages
                 || !(e.getEntityLiving() instanceof EntityPlayer)
@@ -106,6 +113,46 @@ public class MinecraftEventHandler
 
         // Sending death message
         DiscordCE.client.getTextChannelById(Preferences.i.usingChannel).sendMessageAsync(deathMessage, null);
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onPlayerDeathImage(GuiOpenEvent e)
+    {
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
+        if (!(e.getGui() instanceof GuiGameOver)
+                || !Config.demiseImage
+                || player == null
+                || player.getHealth() <= 0F)
+            return;
+
+        // Getting discord and minecraft user
+        try
+        {
+            User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
+            Minecraft mc = Minecraft.getMinecraft();
+            ITextComponent t = ScreenShotHelper.saveScreenshot(mc.mcDataDir,
+                    mc.displayWidth,
+                    mc.displayHeight,
+                    mc.getFramebuffer());
+            String fileName = new JSONObject(TextComponentBase.Serializer.componentToJson(t)).getJSONArray("with")
+                    .getJSONObject(0).getJSONObject("clickEvent").getString("value");
+            File file = new File(fileName);
+            TextChannel c = DiscordCE.client.getTextChannelById(Preferences.i.usingChannel);
+
+            // Doing checks
+            if (c == null || !c.checkPermission(me, Permission.MESSAGE_ATTACH_FILES))
+                return;
+
+            //Sending file
+            c.sendFileAsync(file, null, m -> file.delete());
+        }
+
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
     }
 
     @SubscribeEvent

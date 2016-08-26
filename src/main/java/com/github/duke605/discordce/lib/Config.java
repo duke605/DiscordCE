@@ -29,6 +29,7 @@ public class Config {
     // Misc
     public static boolean deathMessages;
     public static boolean achievementMessages;
+    public static boolean demiseImage;
 
     public static final String CATEGORY_CREDENTIALS = "credentials";
     public static final String CATEGORY_DISPLAY = "display";
@@ -133,6 +134,12 @@ public class Config {
                 , false
                 , "When an achievement is unlocked a message will be sent to the channel you are currently talking to\n" +
                         "if this value is set to true.");
+
+        demiseImage = instance.getBoolean("demiseImage"
+                , Configuration.CATEGORY_GENERAL
+                , false
+                , "When you die an screenshot will be taken and sent to the channel you are currently talking to if\n" +
+                        "value is set to true.");
 
         // Separating server overrides
         for(String o : sno) {
