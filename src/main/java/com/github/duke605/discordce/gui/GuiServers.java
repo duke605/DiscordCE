@@ -71,18 +71,7 @@ public class GuiServers extends GuiListContainer
                 Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
                         HttpUtil.getImage(url, DrawingUtils::circularize));
 
-                MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(f, (image) ->
-                {
-                    if (image == null)
-                    {
-                        VolatileSettings.icons.remove(url);
-                        return;
-                    }
-
-                    DynamicTexture t = new DynamicTexture(image);
-                    Minecraft mc = Minecraft.getMinecraft();
-                    VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
-                }));
+                ConcurrentUtil.pushImageTaskToQueue(f, url);
             });
     }
 

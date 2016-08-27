@@ -1,7 +1,15 @@
 package com.github.duke605.discordce.util;
 
+import com.github.duke605.discordce.handler.MinecraftEventHandler;
+import com.github.duke605.discordce.lib.VolatileSettings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+
+import java.awt.image.BufferedImage;
+import java.util.AbstractMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class ConcurrentUtil
 {
@@ -10,4 +18,20 @@ public class ConcurrentUtil
         t.setDaemon(true);
         return t;
     });
+
+    public static void pushImageTaskToQueue(Future<BufferedImage> future, String url)
+    {
+        MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(future, (image) ->
+        {
+            if (image == null)
+            {
+                VolatileSettings.icons.remove(url);
+                return;
+            }
+
+            DynamicTexture t = new DynamicTexture(image);
+            Minecraft mc = Minecraft.getMinecraft();
+            VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+        }));
+    }
 }
