@@ -7,6 +7,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
 public class DrawingUtils {
 
     /**
@@ -36,7 +39,7 @@ public class DrawingUtils {
         GL11.glColor4d(red/0xff, green/0xff, blue/0xff, 1);
         GL11.glEnable(3042);
         GL11.glTranslatef(xCoord, yCoord, 1.0F);
-        GL11.glScalef(scale, scale, 1.0F);
+        GL11.glScaled(scale, scale, 1.0F);
 
         Gui.drawModalRectWithCustomSizedTexture(0, 0, xLoc, yLoc, xSize, ySize, imageWidth, imageHeight);
         GL11.glColor4d(1, 1, 1, 1);
@@ -180,5 +183,36 @@ public class DrawingUtils {
         font.setUnicodeFlag(prevFlag);
 
         return stringLength;
+    }
+
+    /**
+     * Makes an image circular
+     *
+     * @param image The image to make circular
+     * @return a circular image of the one passed in
+     */
+    public static BufferedImage circularize(BufferedImage image)
+    {
+        // Making image circular
+        BufferedImage out = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = out.createGraphics();
+        try {
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.setColor(Color.BLACK); // The color here doesn't really matter
+            graphics.fillOval(0, 0, image.getWidth(), image.getHeight());
+
+            graphics.setComposite(AlphaComposite.SrcIn); // Only paint inside the oval from now on
+            graphics.drawImage(image, 0, 0, null);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            graphics.dispose();
+        }
+
+        return out;
     }
 }

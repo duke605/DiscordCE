@@ -7,6 +7,7 @@ import com.github.duke605.discordce.lib.VolatileSettings;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.entities.*;
 import net.dv8tion.jda.requests.Requester;
@@ -322,5 +323,23 @@ public class DiscordUtil
                 e.printStackTrace();
             }
         });
+    }
+
+    public static int getStatusColour(OnlineStatus status)
+    {
+        switch (status)
+        {
+            case ONLINE:
+                return 0x43b581;
+
+            case OFFLINE:
+                return 0x2e3136;
+
+            case AWAY:
+                return 0xfaa61a;
+
+            default:
+                return 0xFF0000;
+        }
     }
 }
