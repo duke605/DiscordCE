@@ -2,6 +2,9 @@ package com.github.duke605.discordce.lib;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -33,9 +36,13 @@ public class Preferences
         if (!f.exists())
             save();
 
-        try (JsonReader in = new JsonReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file)))))
+        try (TarArchiveInputStream in = new TarArchiveInputStream(new GZIPInputStream(new FileInputStream(f))))
         {
-            i = new Gson().fromJson(in, Preferences.class);
+            in.getNextTarEntry();
+            try (JsonReader reader = new JsonReader(new InputStreamReader(in)))
+            {
+                i = new Gson().fromJson(reader, Preferences.class);
+            }
         }
 
         catch (Exception e)
@@ -46,15 +53,50 @@ public class Preferences
 
     public static void save()
     {
-        try (PrintWriter out = new PrintWriter(new GZIPOutputStream(new FileOutputStream(file))))
+        try (TarArchiveOutputStream out = new TarArchiveOutputStream(new GZIPOutputStream(new FileOutputStream(file))))
         {
-            out.println(new Gson().toJson(i));
+            TarArchiveEntry e = new TarArchiveEntry("dce.json");
+            String json = new Gson().toJson(i);
+            e.setSize(json.getBytes().length);
+            out.putArchiveEntry(e);
+            out.write(json.getBytes(), 0, json.getBytes().length);
+            out.closeArchiveEntry();
         }
 
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
+//    public static void load(File f)
+//    {
+//        file = f;
+//
+//        // Creating file if it does not exist
+//        if (!f.exists())
+//            save();
+//
+//        try (JsonReader in = new JsonReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(file)))))
+//        {
+//            i = new Gson().fromJson(in, Preferences.class);
+//        }
+//
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public static void save()
+//    {
+//        try (PrintWriter out = new PrintWriter(new GZIPOutputStream(new FileOutputStream(file))))
+//        {
+//            out.println(new Gson().toJson(i));
+//        }
+//
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
     //</editor-fold>
 }

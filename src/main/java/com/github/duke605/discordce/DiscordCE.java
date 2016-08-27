@@ -45,7 +45,7 @@ public class DiscordCE
     public void preInit(FMLPreInitializationEvent e)
     {
         Config.load(e.getSuggestedConfigurationFile());
-        Preferences.load(new File(e.getModConfigurationDirectory(), "dce.json.gz"));
+        Preferences.load(new File(e.getModConfigurationDirectory(), "dce.json.tar.gz"));
     }
 
     @Mod.EventHandler
