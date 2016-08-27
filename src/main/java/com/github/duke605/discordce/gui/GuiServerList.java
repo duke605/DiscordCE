@@ -5,12 +5,15 @@ import com.github.duke605.discordce.gui.abstraction.GuiEmbeddedList;
 import com.github.duke605.discordce.gui.abstraction.GuiEntry;
 import com.github.duke605.discordce.gui.abstraction.GuiListButton;
 import com.github.duke605.discordce.lib.Preferences;
+import com.github.duke605.discordce.lib.VolatileSettings;
 import com.github.duke605.discordce.util.Arrays;
+import com.github.duke605.discordce.util.DrawingUtils;
 import net.dv8tion.jda.entities.Guild;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -91,6 +94,20 @@ public class GuiServerList extends GuiEmbeddedList
                     , x + width - 150 - mc.fontRendererObj.getStringWidth("" + guild.getUsers().size())
                     , y + (height - this.fr.FONT_HEIGHT + 1) / 2
                     , 0xFFFFFF);
+
+            // Drawing guild icon
+            ResourceLocation rl = VolatileSettings.icons.get(guild.getIconUrl());
+
+            // Checking if user avatar is loaded
+            if (rl == null)
+                return;
+
+            // Drawing image
+            DrawingUtils.drawScaledImage(
+                    x - 122
+                    ,y + 2
+                    ,0, 0, 128, 128, 16/128.0F, rl
+                    , 255,255,255, 128, 128);
         }
 
         protected void actionPerformed(GuiButton button)

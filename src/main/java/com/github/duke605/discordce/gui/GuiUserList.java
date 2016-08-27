@@ -90,11 +90,11 @@ public class GuiUserList extends GuiEmbeddedList
                 String url = user.getAvatarId() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl();
 
                 // Checking if the avatar is already loaded or being loaded
-                if (GuiUsers.icons.containsKey(url))
+                if (VolatileSettings.icons.containsKey(url))
                     return;
 
                 // Placeholder so an image isn't fetched twice
-                GuiUsers.icons.put(url, null);
+                VolatileSettings.icons.put(url, null);
 
                 Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
                         HttpUtil.getImage(url, DrawingUtils::circularize));
@@ -103,13 +103,13 @@ public class GuiUserList extends GuiEmbeddedList
                 {
                     if (image == null)
                     {
-                        GuiUsers.icons.remove(url);
+                        VolatileSettings.icons.remove(url);
                         return;
                     }
 
                     DynamicTexture t = new DynamicTexture(image);
                     Minecraft mc = Minecraft.getMinecraft();
-                    GuiUsers.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+                    VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
                 }));
             });
     }
@@ -188,7 +188,7 @@ public class GuiUserList extends GuiEmbeddedList
             if (Config.guildIcons)
                 guiUsers.guilds.forEach(g -> {
                     // Getting icon for guild
-                    ResourceLocation rl = GuiUsers.icons.get(g.getIconUrl());
+                    ResourceLocation rl = VolatileSettings.icons.get(g.getIconUrl());
 
                     // Checking if guild has icon
                     if (rl == null)
@@ -209,11 +209,11 @@ public class GuiUserList extends GuiEmbeddedList
                 });
 
             // Getting user avatar
-            ResourceLocation rl = GuiUsers.icons.get(user.getAvatarId() == null
+            ResourceLocation rl = VolatileSettings.icons.get(user.getAvatarId() == null
                 ? user.getDefaultAvatarUrl()
                 : user.getAvatarUrl());
 
-            ResourceLocation rld = GuiUsers.icons.get(user.getDefaultAvatarUrl());
+            ResourceLocation rld = VolatileSettings.icons.get(user.getDefaultAvatarUrl());
 
             // Checking if user avatar is loaded
             if (rl == null && rld == null)

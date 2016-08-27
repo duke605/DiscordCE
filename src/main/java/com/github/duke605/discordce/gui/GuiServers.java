@@ -4,7 +4,13 @@ import com.github.duke605.discordce.contract.CustomListenerAdapter;
 import com.github.duke605.discordce.gui.abstraction.GuiEmbeddedList;
 import com.github.duke605.discordce.gui.abstraction.GuiListButton;
 import com.github.duke605.discordce.gui.abstraction.GuiListContainer;
+import com.github.duke605.discordce.handler.MinecraftEventHandler;
+import com.github.duke605.discordce.lib.Config;
 import com.github.duke605.discordce.lib.Preferences;
+import com.github.duke605.discordce.lib.VolatileSettings;
+import com.github.duke605.discordce.util.ConcurrentUtil;
+import com.github.duke605.discordce.util.DrawingUtils;
+import com.github.duke605.discordce.util.HttpUtil;
 import com.github.duke605.discordce.util.MCHelper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -15,8 +21,13 @@ import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.text.TextFormatting;
+
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.AbstractMap;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import com.github.duke605.discordce.DiscordCE;
@@ -46,6 +57,33 @@ public class GuiServers extends GuiListContainer
                 GuiServers.this.initGui();
             }
         };
+
+        // Downloading guild icons
+        if (Config.guildIcons)
+            DiscordCE.client.getGuilds().forEach(g -> {
+                String url = g.getIconUrl();
+
+                if (VolatileSettings.icons.containsKey(url))
+                    return;
+
+                VolatileSettings.icons.put(url, null);
+
+                Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
+                        HttpUtil.getImage(url, DrawingUtils::circularize));
+
+                MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(f, (image) ->
+                {
+                    if (image == null)
+                    {
+                        VolatileSettings.icons.remove(url);
+                        return;
+                    }
+
+                    DynamicTexture t = new DynamicTexture(image);
+                    Minecraft mc = Minecraft.getMinecraft();
+                    VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+                }));
+            });
     }
 
     @Override

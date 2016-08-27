@@ -18,16 +18,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
 
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GuiUsers extends GuiListContainer
 {
@@ -42,7 +38,6 @@ public class GuiUsers extends GuiListContainer
     public List<User> users;
     public List<Guild> guilds;
     public GuiTextField search;
-    static HashMap<String, ResourceLocation> icons = new HashMap<>();
 
     public GuiUsers(GuiScreen parent)
     {
@@ -55,10 +50,10 @@ public class GuiUsers extends GuiListContainer
             guilds.forEach(g -> {
                 String url = g.getIconUrl();
 
-                if (icons.containsKey(url))
+                if (VolatileSettings.icons.containsKey(url))
                     return;
 
-                GuiUsers.icons.put(url, null);
+                VolatileSettings.icons.put(url, null);
 
                 Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
                         HttpUtil.getImage(url, DrawingUtils::circularize));
@@ -67,13 +62,13 @@ public class GuiUsers extends GuiListContainer
                 {
                     if (image == null)
                     {
-                        icons.remove(url);
+                        VolatileSettings.icons.remove(url);
                         return;
                     }
 
                     DynamicTexture t = new DynamicTexture(image);
                     Minecraft mc = Minecraft.getMinecraft();
-                    GuiUsers.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+                    VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
                 }));
             });
     }

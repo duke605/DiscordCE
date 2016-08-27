@@ -1,6 +1,7 @@
 package com.github.duke605.discordce.lib;
 
 import com.github.duke605.discordce.entity.Relationship;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class VolatileSettings {
 
     public static volatile HashMap<String, Relationship> relationships = new HashMap<>();
+    public static HashMap<String, ResourceLocation> icons = new HashMap<>();
 
     public static boolean isBlocked(String userId)
     {

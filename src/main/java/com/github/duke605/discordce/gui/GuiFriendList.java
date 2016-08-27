@@ -4,22 +4,28 @@ import com.github.duke605.discordce.entity.Relationship;
 import com.github.duke605.discordce.gui.abstraction.GuiEmbeddedList;
 import com.github.duke605.discordce.gui.abstraction.GuiEntry;
 import com.github.duke605.discordce.gui.abstraction.GuiListButton;
+import com.github.duke605.discordce.handler.MinecraftEventHandler;
+import com.github.duke605.discordce.lib.Config;
 import com.github.duke605.discordce.lib.VolatileSettings;
-import com.github.duke605.discordce.util.Arrays;
-import com.github.duke605.discordce.util.DiscordUtil;
-import com.github.duke605.discordce.util.DrawingUtils;
+import com.github.duke605.discordce.util.*;
+import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.ResourceLocation;
 
+import java.awt.image.BufferedImage;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 
 public class GuiFriendList extends GuiEmbeddedList
 {
     private GuiFriends guiFriends;
-    private List<IGuiListEntry> entries = new ArrayList<>();
+    private List<RelationshipEntry> entries = new ArrayList<>();
 
     public GuiFriendList(Minecraft mc, GuiFriends guiFriends)
     {
@@ -61,6 +67,37 @@ public class GuiFriendList extends GuiEmbeddedList
                             || r.getValue().type == Relationship.OUTGOING)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
+
+        // Downloading user avatars
+        if (Config.userAvatars)
+            entries.forEach(e -> {
+                User user = e.relationship.user;
+
+                String url = user.getAvatarId() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl();
+
+                // Checking if the avatar is already loaded or being loaded
+                if (VolatileSettings.icons.containsKey(url))
+                    return;
+
+                // Placeholder so an image isn't fetched twice
+                VolatileSettings.icons.put(url, null);
+
+                Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
+                        HttpUtil.getImage(url, DrawingUtils::circularize));
+
+                MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(f, (image) ->
+                {
+                    if (image == null)
+                    {
+                        VolatileSettings.icons.remove(url);
+                        return;
+                    }
+
+                    DynamicTexture t = new DynamicTexture(image);
+                    Minecraft mc = Minecraft.getMinecraft();
+                    VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+                }));
+            });
     }
 
     @Override
@@ -77,7 +114,7 @@ public class GuiFriendList extends GuiEmbeddedList
 
     public class RelationshipEntry extends GuiEntry
     {
-        private Relationship relationship;
+        public Relationship relationship;
         private FontRenderer fr;
 
         public RelationshipEntry(FontRenderer fr, Relationship relationship)
@@ -116,24 +153,7 @@ public class GuiFriendList extends GuiEmbeddedList
 
             // Status
             long colour;
-            switch (relationship.user.getOnlineStatus())
-            {
-                case ONLINE:
-                    colour = 0x43b581;
-                    break;
-
-                case OFFLINE:
-                    colour = 0x2e3136;
-                    break;
-
-                case AWAY:
-                    colour = 0xfaa61a;
-                    break;
-
-                default:
-                    colour = 0xFF0000;
-                    break;
-            }
+            colour = DiscordUtil.getStatusColour(relationship.user.getOnlineStatus());
 
             // Username
             this.fr.drawString(Arrays.truncate(relationship.user.getUsername(), 20)
@@ -147,6 +167,24 @@ public class GuiFriendList extends GuiEmbeddedList
                     , (colour & 0x00FF00) >> 8
                     , colour & 0x0000FF
                     , 10, 10);
+
+            // Getting user avatar
+            ResourceLocation rl = VolatileSettings.icons.get(relationship.user.getAvatarId() == null
+                    ? relationship.user.getDefaultAvatarUrl()
+                    : relationship.user.getAvatarUrl());
+
+            ResourceLocation rld = VolatileSettings.icons.get(relationship.user.getDefaultAvatarUrl());
+
+            // Checking if user avatar is loaded
+            if (rl == null && rld == null)
+                return;
+
+            // Drawing image
+            DrawingUtils.drawScaledImage(
+                    x - 122
+                    ,y + 2
+                    ,0, 0, 128, 128, 16/128.0F, rl == null ? rld : rl
+                    , 255,255,255, rl == null ? 0.5 : 1 ,128, 128);
         }
 
         @Override
