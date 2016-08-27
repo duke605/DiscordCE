@@ -3,23 +3,23 @@ package com.github.duke605.discordce.gui;
 import com.github.duke605.discordce.DiscordCE;
 import com.github.duke605.discordce.gui.abstraction.GuiEmbeddedList;
 import com.github.duke605.discordce.gui.abstraction.GuiEntry;
+import com.github.duke605.discordce.handler.MinecraftEventHandler;
 import com.github.duke605.discordce.lib.Config;
 import com.github.duke605.discordce.lib.VolatileSettings;
-import com.github.duke605.discordce.util.Arrays;
-import com.github.duke605.discordce.util.DiscordUtil;
-import com.github.duke605.discordce.util.DrawingUtils;
+import com.github.duke605.discordce.util.*;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.entities.impl.GuildImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringUtils;
 
+import java.awt.image.BufferedImage;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -46,6 +46,7 @@ public class GuiUserList extends GuiEmbeddedList
     {
         final int MAX = 30;
 
+
         entries = guiUsers.users.parallelStream()
                 .sorted((u, u2) -> {
                     String search = guiUsers.search.getText().trim();
@@ -63,7 +64,13 @@ public class GuiUserList extends GuiEmbeddedList
                 })
                 .filter(u -> {
                     String search = guiUsers.search.getText().trim();
+                    User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
 
+                    // Exempting ME
+                    if (u.getId().equals(me.getId()))
+                        return false;
+
+                    // Only filtering if search
                     if (search.isEmpty())
                         return true;
 
@@ -74,6 +81,37 @@ public class GuiUserList extends GuiEmbeddedList
                 .limit(MAX)
                 .map(UserEntry::new)
                 .collect(Collectors.toList());
+
+        // Downloading user avatars
+        if (Config.userAvatars)
+            entries.forEach(u -> {
+                User user = u.user;
+
+                String url = user.getAvatarId() == null ? user.getDefaultAvatarUrl() : user.getAvatarUrl();
+
+                // Checking if the avatar is already loaded or being loaded
+                if (GuiUsers.icons.containsKey(url))
+                    return;
+
+                // Placeholder so an image isn't fetched twice
+                GuiUsers.icons.put(url, null);
+
+                Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
+                        HttpUtil.getImage(url, DrawingUtils::circularize));
+
+                MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(f, (image) ->
+                {
+                    if (image == null)
+                    {
+                        GuiUsers.icons.remove(url);
+                        return;
+                    }
+
+                    DynamicTexture t = new DynamicTexture(image);
+                    Minecraft mc = Minecraft.getMinecraft();
+                    GuiUsers.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+                }));
+            });
     }
 
     @Override
@@ -145,30 +183,48 @@ public class GuiUserList extends GuiEmbeddedList
 
             // Finding common guilds
             AtomicInteger count = new AtomicInteger(0);
-            guiUsers.guilds.forEach(g -> {
-                try
-                {
+
+            // Drawing guilds user is in
+            if (Config.guildIcons)
+                guiUsers.guilds.forEach(g -> {
+                    // Getting icon for guild
+                    ResourceLocation rl = GuiUsers.icons.get(g.getIconUrl());
+
+                    // Checking if guild has icon
+                    if (rl == null)
+                    {
+                        count.incrementAndGet();
+                        return;
+                    }
+
+                    // Checking if user is in current guild
                     if (!g.getUsers().contains(user))
                         return;
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
-                    return;
-                }
 
-                // Getting icon for guild
-                ResourceLocation rl = guiUsers.guildIcons.get(g.getId());
+                    // Drawing image
+                    DrawingUtils.drawScaledImage(
+                            (x + width) - 18 - (count.getAndIncrement() * 20)
+                            ,y + 2
+                            ,0, 0, 128, 128, 16/128.0F, rl, 255,255,255, 128, 128);
+                });
 
-                // Could not find guild icon
-                if (rl == null)
-                    return;
+            // Getting user avatar
+            ResourceLocation rl = GuiUsers.icons.get(user.getAvatarId() == null
+                ? user.getDefaultAvatarUrl()
+                : user.getAvatarUrl());
 
-                // Drawing image
-                DrawingUtils.drawScaledImage(
-                        (x + width) - 18 - (count.getAndIncrement() * 20)
-                        ,y + 2
-                        ,0, 0, 128, 128, 16/128.0F, rl, 255,255,255, 128, 128);
-            });
+            ResourceLocation rld = GuiUsers.icons.get(user.getDefaultAvatarUrl());
+
+            // Checking if user avatar is loaded
+            if (rl == null && rld == null)
+                return;
+
+            // Drawing image
+            DrawingUtils.drawScaledImage(
+                    x - 22
+                    ,y + 2
+                    ,0, 0, 128, 128, 16/128.0F, rl == null ? rld : rl
+                    , 255,255,255, rl == null ? 0.5 : 1 ,128, 128);
         }
 
         @Override
@@ -177,7 +233,8 @@ public class GuiUserList extends GuiEmbeddedList
             if (super.mousePressed(var1, mouseX, mouseY, var4, var5, var6))
                 return true;
 
-            selectedIdx = var1;
+            if (!user.isBot())
+                selectedIdx = var1;
             return false;
         }
     }

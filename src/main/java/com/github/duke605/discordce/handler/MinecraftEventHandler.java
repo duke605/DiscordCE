@@ -32,12 +32,19 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.json.JSONObject;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayDeque;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 public class MinecraftEventHandler
 {
 
     private long lastTyping = 0;
+    public static Queue<Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>>> queue = new ArrayDeque<>();
 
      @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
@@ -190,5 +197,32 @@ public class MinecraftEventHandler
 
         // Telling player configs were changed
         MCHelper.sendMessage(TextFormatting.GRAY + "Configurations updated.");
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onTick(TickEvent e)
+    {
+        if (e.type != TickEvent.Type.CLIENT
+                || queue.size() <= 0)
+            return;
+
+        Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>> entry = queue.poll();
+        Future<BufferedImage> future = entry.getKey();
+
+        // Checking if task is done
+        if (!future.isDone())
+            queue.add(entry);
+
+        try
+        {
+            // Processing
+            BufferedImage image = future.get();
+            entry.getValue().accept(image);
+        }
+        catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
     }
 }

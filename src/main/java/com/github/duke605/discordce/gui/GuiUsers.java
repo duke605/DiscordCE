@@ -3,46 +3,46 @@ package com.github.duke605.discordce.gui;
 import com.github.duke605.discordce.DiscordCE;
 import com.github.duke605.discordce.gui.abstraction.GuiEmbeddedList;
 import com.github.duke605.discordce.gui.abstraction.GuiListContainer;
+import com.github.duke605.discordce.handler.MinecraftEventHandler;
+import com.github.duke605.discordce.lib.Config;
+import com.github.duke605.discordce.lib.VolatileSettings;
+import com.github.duke605.discordce.util.ConcurrentUtil;
+import com.github.duke605.discordce.util.DiscordUtil;
 import com.github.duke605.discordce.util.DrawingUtils;
 import com.github.duke605.discordce.util.HttpUtil;
-import com.google.common.collect.ImmutableList;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.request.HttpRequest;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.entities.impl.GuildImpl;
-import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GuiUsers extends GuiListContainer
 {
     private GuiUserList userList;
     private GuiScreen parent;
+
     private GuiButton next;
     private GuiButton prev;
+    private GuiButton addRemove;
+    private GuiButton blockUnblock;
+
     public List<User> users;
     public List<Guild> guilds;
     public GuiTextField search;
-    static HashMap<String, ResourceLocation> guildIcons = new HashMap<>();
+    static HashMap<String, ResourceLocation> icons = new HashMap<>();
 
     public GuiUsers(GuiScreen parent)
     {
@@ -50,32 +50,38 @@ public class GuiUsers extends GuiListContainer
         this.users = DiscordCE.client.getUsers();
         this.guilds = DiscordCE.client.getGuilds();
 
-        DiscordCE.client.getGuilds().forEach(g -> {
-            BufferedImage image = null;
-            try
-            {
-                if (guildIcons.containsKey(g.getId()))
+        // Downloading guild icons
+        if (Config.guildIcons)
+            guilds.forEach(g -> {
+                String url = g.getIconUrl();
+
+                if (icons.containsKey(url))
                     return;
 
-                image = HttpUtil.getImage(g.getIconUrl(), DrawingUtils::circularize);
+                GuiUsers.icons.put(url, null);
 
-                if (image == null)
-                    throw new FileNotFoundException("guild icon could not be found");
+                Future<BufferedImage> f = ConcurrentUtil.executor.submit(() ->
+                        HttpUtil.getImage(url, DrawingUtils::circularize));
 
-                DynamicTexture t = new DynamicTexture(image);
-                Minecraft mc = Minecraft.getMinecraft();
-                guildIcons.put(g.getId(), mc.getTextureManager().getDynamicTextureLocation(g.getId(), t));
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        });
+                MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(f, (image) ->
+                {
+                    if (image == null)
+                    {
+                        icons.remove(url);
+                        return;
+                    }
+
+                    DynamicTexture t = new DynamicTexture(image);
+                    Minecraft mc = Minecraft.getMinecraft();
+                    GuiUsers.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
+                }));
+            });
     }
 
     @Override
     public void initGui()
     {
-        search = new GuiTextField(0, mc.fontRendererObj, 11, height - 46, 200, 19);
+        search = new GuiTextField(0, mc.fontRendererObj, width/2-100, height - 22, 200, 19);
         userList = new GuiUserList(mc, this);
         buttonList.add(new GuiButton(0
                 , 10
@@ -97,7 +103,12 @@ public class GuiUsers extends GuiListContainer
                 , 40
                 , 20
                 , "Next >"));
+
+        buttonList.add(addRemove = new GuiButton(1, width/2-101, height - 48, 100, 20, "-"));
+        buttonList.add(blockUnblock = new GuiButton(2, width/2+1, height - 48, 100, 20, "-"));
         prev.enabled = false;
+        addRemove.enabled = false;
+        blockUnblock.enabled = false;
     }
 
     @Override
@@ -106,6 +117,7 @@ public class GuiUsers extends GuiListContainer
         // Previous page
         if (b.id == -1)
         {
+            userList.selectedIdx = -1;
             next.enabled = true;
 
             if (--userList.page == 0)
@@ -117,6 +129,7 @@ public class GuiUsers extends GuiListContainer
         // Next page
         else if (b.id == -2)
         {
+            userList.selectedIdx = -1;
             prev.enabled = true;
             userList.page++;
 
@@ -129,6 +142,69 @@ public class GuiUsers extends GuiListContainer
         // Back to parent
         else if (b.id == 0)
             mc.displayGuiScreen(parent);
+
+        // Adding removing friend
+        else if (b.id == 1)
+        {
+            User user = userList.entries.get(userList.selectedIdx).user;
+            String s = search.getText();
+            int selected = userList.selectedIdx;
+            int page = userList.page;
+
+            // Removing friend
+            if (VolatileSettings.isFriend(user.getId()))
+                mc.displayGuiScreen(new GuiYesNo((result, id) -> {
+                    if (result)
+                        DiscordUtil.deleteFriend(user.getId());
+
+                    mc.displayGuiScreen(this);
+                    setState(s, page, selected);
+                }, "", "Are you sure you want to unfriend " + user.getUsername() + "?", 0));
+
+            // Canceling friend request
+            else if (VolatileSettings.hasOutgoingFriendRequest(user.getId()))
+                mc.displayGuiScreen(new GuiYesNo((result, id) -> {
+                    if (result)
+                        DiscordUtil.deleteFriend(user.getId());
+
+                    mc.displayGuiScreen(this);
+                    setState(s, page, selected);
+                }, "", "Are you sure you want to cancel your friend request to " + user.getUsername() + "?", 0));
+
+            // Adding friend
+            else
+                DiscordUtil.addFriend(user.getId());
+        }
+
+        // Blocking unblocking user
+        else if (b.id == 2)
+        {
+            User user = userList.entries.get(userList.selectedIdx).user;
+            String s = search.getText();
+            int page = userList.page;
+            int selected = userList.selectedIdx;
+
+            // Unblocking user
+            if (VolatileSettings.isBlocked(user.getId()))
+                mc.displayGuiScreen(new GuiYesNo((result, id) -> {
+                    if (result)
+                        DiscordUtil.unblock(user.getId());
+
+                    mc.displayGuiScreen(this);
+                    setState(s, page, selected);
+                }, "", "Are you sure you want to unblock " + user.getUsername() + "?", 0));
+
+           // Blocking user
+            else
+                mc.displayGuiScreen(new GuiYesNo((result, id) -> {
+                    if (result)
+                        DiscordUtil.block(user.getId());
+
+                    mc.displayGuiScreen(this);
+                    setState(s, page, selected);
+                }, "Are you sure you want to block " + user.getUsername() + "?"
+                        , "This will also unfriend them if you are friends.", 0));
+        }
     }
 
     @Override
@@ -162,6 +238,7 @@ public class GuiUsers extends GuiListContainer
         else if (search.isFocused())
         {
             search.textboxKeyTyped(c, code);
+            userList.selectedIdx = -1;
             userList.page = 0;
             userList.initList();
 
@@ -185,5 +262,57 @@ public class GuiUsers extends GuiListContainer
     public void updateScreen()
     {
         search.updateCursorCounter();
+
+        // Enabling buttons
+        if (userList.selectedIdx != -1)
+        {
+            addRemove.enabled = true;
+            blockUnblock.enabled = true;
+
+            User user = userList.entries.get(userList.selectedIdx).user;
+
+            // Setting add remove to remove friend
+            if (VolatileSettings.isFriend(user.getId()))
+                addRemove.displayString = "Remove Friend";
+
+            // Setting add remove to cancel
+            else if (VolatileSettings.hasIncomingFriendRequest(user.getId()))
+                addRemove.displayString = "Accept Request";
+
+            // Setting add remove to cancel
+            else if (VolatileSettings.hasOutgoingFriendRequest(user.getId()))
+                addRemove.displayString = "Cancel Request";
+
+            // Setting add remove to remove friend
+            else
+                addRemove.displayString = "Add Friend";
+
+
+            // Setting block unblock to unblock
+            if (VolatileSettings.isBlocked(user.getId()))
+                blockUnblock.displayString = "Unblock";
+
+            // Setting block unblock to block
+            else
+                blockUnblock.displayString = "Block";
+        }
+
+        // Disabling buttons
+        else
+        {
+            addRemove.enabled = false;
+            blockUnblock.enabled = false;
+            addRemove.displayString = "-";
+            blockUnblock.displayString = "-";
+        }
+    }
+
+    private void setState(String s, int page, int selected)
+    {
+        search.setFocused(true);
+        for(char c : s.toCharArray())
+            try { keyTyped(c, (int) c); } catch (Exception e) {}
+        userList.page = page;
+        userList.selectedIdx = selected;
     }
 }

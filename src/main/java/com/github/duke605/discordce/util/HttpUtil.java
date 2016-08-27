@@ -13,7 +13,6 @@ import java.util.function.Function;
 
 public class HttpUtil
 {
-
     public static BufferedImage getImage(String url, Function<BufferedImage, BufferedImage> process)
     {
         File cacheDir = new File(Minecraft.getMinecraft().mcDataDir, "tmp");
@@ -22,15 +21,7 @@ public class HttpUtil
 
         try
         {
-            HttpResponse<String> r = Unirest.head(url).asString();
-
-            // Checking if request was ok
-            if (!isOk(r.getStatus()))
-                return null;
-
-            // Getting image md5 from header
-            String md5 = r.getHeaders().getFirst("etag").substring(1, 32);
-            File cacheFile = new File(cacheDir, md5 + ".jpg.gz");
+            File cacheFile = new File(cacheDir, url.replaceAll("https?://", "") + ".gz");
 
             // Checking if in cache
             if (cacheFile.exists())
@@ -47,7 +38,7 @@ public class HttpUtil
                 HttpResponse<InputStream> r1 = Unirest.get(url).asBinary();
 
                 // Checking if response was ok
-                if (!isOk(r.getStatus()))
+                if (!isOk(r1.getStatus()))
                     return null;
 
                 in = r1.getBody();

@@ -28,6 +28,28 @@ public class DrawingUtils {
      * @param blue
      */
     public static void drawScaledImage(float xCoord, float yCoord, int xLoc, int yLoc, int xSize, int ySize, float scale, ResourceLocation image, double red, double green, double blue, float imageWidth, float imageHeight) {
+        drawScaledImage(xCoord, yCoord, xLoc, yLoc, xSize, ySize, scale, image, red, green, blue, 1, imageWidth, imageHeight);
+    }
+
+    /**
+     * Draws a scaled image to the screen
+     *
+     * @param xCoord The x coordinate where the image will be on the screen
+     * @param yCoord The y coordinate where the image will be drawn on the screen
+     * @param xLoc The x position of the image in the image file
+     * @param yLoc The y position of the image in the image file
+     * @param xSize The width of the image in the image file
+     * @param ySize The height of the image in the image file
+     * @param scale The scaling of the image
+     * @param image The {@link ResourceLocation} of the image
+     * @param red
+     * @param green
+     * @param blue
+     * @param alpha
+     */
+    public static void drawScaledImage(float xCoord, float yCoord, int xLoc, int yLoc, int xSize, int ySize
+            , float scale, ResourceLocation image, double red, double green, double blue, double alpha, float imageWidth
+            , float imageHeight) {
         Gui gui = Minecraft.getMinecraft().currentScreen;
 
         if (gui == null)
@@ -36,7 +58,7 @@ public class DrawingUtils {
         GL11.glPushMatrix();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(image);
-        GL11.glColor4d(red/0xff, green/0xff, blue/0xff, 1);
+        GL11.glColor4d(red/0xff, green/0xff, blue/0xff, alpha);
         GL11.glEnable(3042);
         GL11.glTranslatef(xCoord, yCoord, 1.0F);
         GL11.glScaled(scale, scale, 1.0F);

@@ -18,6 +18,8 @@ public class Config {
     public static String serverLayout;
     public static HashMap<String, String> serverOverrides = new HashMap<>();
     public static HashMap<String, String> channelOverrides = new HashMap<>();
+    public static boolean userAvatars;
+    public static boolean guildIcons;
 
     // Colours
     public static String friendColour;
@@ -87,6 +89,20 @@ public class Config {
                         "placing an override in the list below. For example if you have a channel with the name\n" +
                         "\"Very long and annoying name\" and want to change it to \"VLAN\" when displayed put\n" +
                         "\"Very long and annoying name::VLAN\" in the list.");
+
+        userAvatars = instance.getBoolean("userAvatars"
+                , CATEGORY_DISPLAY
+                , false
+                , "Determines if user avatars will be displayed beside usernames in the GUI. !!WANING!! setting this\n" +
+                        "option to true will download all user avatars potentially using up A LOT of storage. Using\n" +
+                        "this feature when connected to multiple servers that have thousands of users is not advised.");
+
+        guildIcons = instance.getBoolean("guildIcons"
+                , CATEGORY_DISPLAY
+                , true
+                , "Determines if guild icons will be displayed in the GUI. !!WANING!! setting this option to true\n" +
+                        "will download all guild icons potentially using up A LOT of storage. Using the feature\n" +
+                        "when connected to 500 or more guilds is not advised.");
 
         friendColour = instance.getString("friendColour"
                 , CATEGORY_COLOUR
