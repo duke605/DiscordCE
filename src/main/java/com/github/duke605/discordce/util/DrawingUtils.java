@@ -39,6 +39,7 @@ public class DrawingUtils {
         GL11.glScalef(scale, scale, 1.0F);
 
         Gui.drawModalRectWithCustomSizedTexture(0, 0, xLoc, yLoc, xSize, ySize, imageWidth, imageHeight);
+        GL11.glColor4d(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
 
