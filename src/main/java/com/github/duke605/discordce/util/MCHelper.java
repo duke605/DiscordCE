@@ -16,9 +16,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- * Created by Cole on 8/20/2016.
- */
 public class MCHelper {
 
     /**
@@ -141,6 +138,19 @@ public class MCHelper {
         return "§" + Config.channelColour + name + "§r";
     }
 
+    /**
+     * Builds a message that is clickable to send to the minecraft player
+     *
+     * @param name The username of the message sender
+     * @param nick The nickname (if they have one) of the message sender
+     * @param userId The id of the message sender
+     * @param g The Guild the message was sent from (Null if DM)
+     * @param c The Channel the message was sent from (Null if DM)
+     * @param message The message as a string
+     * @param template How to layout the message
+     * @param m The message object
+     * @return serialized json
+     */
     public static String buildInteractiveMessage(@NotNull String name
             , String nick
             , @NotNull String userId

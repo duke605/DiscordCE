@@ -13,6 +13,15 @@ import java.util.function.Function;
 
 public class HttpUtil
 {
+
+    /**
+     * Fetches an image from the cache or the remote if it's not in the cache
+     *
+     * @param url The url of the image to fetch
+     * @param process A callback that allows processing to be done to the image before it is
+     *                returned. null if no processing is to be done.
+     * @return the image or null if an error occurred and the image could not be fetched
+     */
     public static BufferedImage getImage(String url, Function<BufferedImage, BufferedImage> process)
     {
         File cacheDir = new File(Minecraft.getMinecraft().mcDataDir, "tmp");
@@ -72,6 +81,12 @@ public class HttpUtil
         return null;
     }
 
+    /**
+     * Checks if the status code is acceptable
+     *
+     * @param code The status code of the response
+     * @return true if the code is ok
+     */
     public static boolean isOk(int code)
     {
         return code > 199 && code < 300;

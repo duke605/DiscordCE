@@ -5,6 +5,10 @@ package com.github.duke605.discordce.util;
  */
 public class NumberUtil
 {
+
+    /**
+     * @return true if the passed string is an int
+     */
     public static boolean isInt(String num)
     {
         try
@@ -16,6 +20,9 @@ public class NumberUtil
         return false;
     }
 
+    /**
+     * @return true of the passed string is a double
+     */
     public static boolean isDouble(String num)
     {
         try

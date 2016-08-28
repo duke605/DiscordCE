@@ -13,6 +13,12 @@ import java.util.zip.GZIPOutputStream;
 public class CompressionUtil
 {
 
+    /**
+     * Gets the compressed input stream for an image
+     *
+     * @param compressedFile The compressed file to get the {@link InputStream} for
+     * @return the {@link InputStream} for the passed file
+     */
     public static InputStream getInputstream(File compressedFile)
     {
         try
@@ -28,6 +34,13 @@ public class CompressionUtil
         return null;
     }
 
+    /**
+     * Saves the passed bytes to the passed file
+     *
+     * @param compressedFile The file the bytes are to be saved to
+     * @param boas The {@link ByteArrayOutputStream} containing the bytes to be saved
+     * @return true if the file was successfully saved
+     */
     public static boolean saveToFile(File compressedFile, ByteArrayOutputStream boas)
     {
         try

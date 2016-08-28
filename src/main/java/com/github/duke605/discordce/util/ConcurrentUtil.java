@@ -19,6 +19,13 @@ public class ConcurrentUtil
         return t;
     });
 
+    /**
+     * Pushes a fetch image request to the queue so that when the image is done being fetched it
+     * will be returned to the calling thread
+     *
+     * @param future The task being waited on
+     * @param url The url of the image
+     */
     public static void pushImageTaskToQueue(Future<BufferedImage> future, String url)
     {
         MinecraftEventHandler.queue.add(new AbstractMap.SimpleEntry<>(future, (image) ->

@@ -4,11 +4,19 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Cole on 8/24/2016.
- */
 public class RegexUtil
 {
+
+    /**
+     * Replaces all occurrences of the pattern in this input
+     *
+     * @param p The pattern to match on
+     * @param s The input string
+     * @param r The template of the replacement string
+     * @param cb The callback that returns an array of objects to place into the
+     *           template
+     * @return a string will all matched patterns replaced
+     */
     public static String replaceAll(Pattern p, String s, String r, Function<Matcher, Object[]> cb)
     {
         Matcher m = p.matcher(s);
