@@ -2,8 +2,8 @@ package com.github.duke605.discordce.gui;
 
 import com.github.duke605.discordce.DiscordCE;
 import com.github.duke605.discordce.gui.abstraction.GuiEmbeddedList;
+import com.github.duke605.discordce.gui.abstraction.GuiListButton;
 import com.github.duke605.discordce.gui.abstraction.GuiListContainer;
-import com.github.duke605.discordce.handler.MinecraftEventHandler;
 import com.github.duke605.discordce.lib.Config;
 import com.github.duke605.discordce.lib.VolatileSettings;
 import com.github.duke605.discordce.util.ConcurrentUtil;
@@ -12,16 +12,10 @@ import com.github.duke605.discordce.util.DrawingUtils;
 import com.github.duke605.discordce.util.HttpUtil;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.gui.*;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -34,6 +28,8 @@ public class GuiUsers extends GuiListContainer
     private GuiButton prev;
     private GuiButton addRemove;
     private GuiButton blockUnblock;
+    private GuiButton dm;
+    private GuiButton ignore;
 
     public List<User> users;
     public List<Guild> guilds;
@@ -90,9 +86,13 @@ public class GuiUsers extends GuiListContainer
 
         buttonList.add(addRemove = new GuiButton(1, width/2-101, height - 48, 100, 20, "-"));
         buttonList.add(blockUnblock = new GuiButton(2, width/2+1, height - 48, 100, 20, "-"));
+        buttonList.add(ignore = new GuiButton(3, width/2-203, height - 48, 100, 20, "-"));
+        buttonList.add(dm = new GuiButton(4, width/2+103, height - 48, 100, 20, "-"));
         prev.enabled = false;
         addRemove.enabled = false;
         blockUnblock.enabled = false;
+        dm.enabled = false;
+        ignore.enabled = false;
     }
 
     @Override
@@ -189,6 +189,26 @@ public class GuiUsers extends GuiListContainer
                 }, "Are you sure you want to block " + user.getUsername() + "?"
                         , "This will also unfriend them if you are friends.", 0));
         }
+
+        else if (b.id == 3)
+        {
+            String s = search.getText();
+            int page = userList.page;
+            int selected = userList.selectedIdx;
+            User user = userList.entries.get(userList.selectedIdx).user;
+
+            mc.displayGuiScreen(new GuiYesNo((result, id) -> {
+                if (result)
+                    DiscordUtil.deleteFriend(user.getId());
+
+                mc.displayGuiScreen(this);
+                setState(s ,page, selected);
+            }, "", "Are you sure you want to ignore " + user.getUsername() + "'s friend request?", 0));
+        }
+
+        // DM
+        else if (b.id == 4)
+            mc.displayGuiScreen(new GuiChat("/// " + userList.entries.get(userList.selectedIdx).user.getId() + " "));
     }
 
     @Override
@@ -252,6 +272,8 @@ public class GuiUsers extends GuiListContainer
         {
             addRemove.enabled = true;
             blockUnblock.enabled = true;
+            ignore.enabled = false;
+            ignore.displayString = "-";
 
             User user = userList.entries.get(userList.selectedIdx).user;
 
@@ -261,7 +283,11 @@ public class GuiUsers extends GuiListContainer
 
             // Setting add remove to cancel
             else if (VolatileSettings.hasIncomingFriendRequest(user.getId()))
+            {
                 addRemove.displayString = "Accept Request";
+                ignore.displayString = "Ignore Request";
+                ignore.enabled = true;
+            }
 
             // Setting add remove to cancel
             else if (VolatileSettings.hasOutgoingFriendRequest(user.getId()))
@@ -274,11 +300,21 @@ public class GuiUsers extends GuiListContainer
 
             // Setting block unblock to unblock
             if (VolatileSettings.isBlocked(user.getId()))
+            {
+                dm.displayString = "-";
+                dm.enabled = false;
                 blockUnblock.displayString = "Unblock";
+            }
 
             // Setting block unblock to block
             else
+            {
+                dm.displayString = "Direct Message";
+                dm.enabled = true;
                 blockUnblock.displayString = "Block";
+            }
+
+
         }
 
         // Disabling buttons
@@ -286,8 +322,12 @@ public class GuiUsers extends GuiListContainer
         {
             addRemove.enabled = false;
             blockUnblock.enabled = false;
+            dm.enabled = false;
+            ignore.enabled = false;
             addRemove.displayString = "-";
             blockUnblock.displayString = "-";
+            dm.displayString = "-";
+            ignore.displayString = "-";
         }
     }
 

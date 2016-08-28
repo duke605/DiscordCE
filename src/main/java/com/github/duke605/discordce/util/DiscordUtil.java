@@ -144,7 +144,9 @@ public class DiscordUtil
         }
 
         // Checking if the user is already blocked
-        if (!VolatileSettings.isFriend(userId) && !VolatileSettings.hasOutgoingFriendRequest(userId))
+        if (!VolatileSettings.isFriend(userId)
+                && !VolatileSettings.hasOutgoingFriendRequest(userId)
+                && !VolatileSettings.hasIncomingFriendRequest(userId))
         {
             MCHelper.sendMessage("§cThe user you specified to unfriend is not a friend and does not have a pending " +
                     "friend request.");
