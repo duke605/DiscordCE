@@ -58,6 +58,7 @@ public class DiscordCE
                     .addListener(new DiscordEventHandler())
                     .setEmail(Config.email)
                     .setPassword(Config.password)
+                    .setAudioEnabled(false)
                     .buildAsync();
         }
         catch (Exception ex)

@@ -7,14 +7,20 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "gradle plugin repository"
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "com.github.johnrengelman.shadow"
 
-/*
+/*mine
 // for people who want stable - not yet functional for MC 1.8.8 - we require the forgegradle 2.1 snapshot
 plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
@@ -24,10 +30,13 @@ version = "1.0.0"
 group= "com.github.duke605" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "dce"
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 minecraft {
     version = "1.10.2-12.18.1.2073"
     runDir = "run"
-    
+
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -45,46 +54,76 @@ repositories {
 }
 
 dependencies {
-    compile 'net.dv8tion:JDA-Client:0.2.0_9'
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+    compile ('net.dv8tion:JDA-Client:0.2.0_9') {
+        // we don't want junit as runtime dependency, it's unneeded
+        exclude group: 'junit', module: 'junit'
 
-    // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
-    // except that these dependencies get remapped to your current MCP mappings
-    //deobfCompile 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-    //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+        // remove the exludes to include audio libs
+        exclude group: 'jflac', module: 'jflac'
+        exclude group: 'net.sourceforge.jaadec', module: 'jaad'
+        exclude group: 'org.tritonus', module: 'tritonus-dsp'
+        exclude group: 'com.googlecode.soundlibs', module: 'tritonus-share'
+        exclude group: 'com.googlecode.soundlibs', module: 'mp3spi'
+    }
 
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                include 'mcmod.info'
+
+                // replace version and mcversion
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.14.1'
+}
+
+shadowJar {
+    classifier = ''
+    relocate 'com.mashape.unirest', 'relocate.com.mashape.unirest'
+    relocate 'com.neovisionaries.ws.client', 'relocate.com.neovisionaries.ws.client'
+    relocate 'com.sun.jna', 'relocate.com.sun.jna'
+    relocate 'net.dv8tion.jda', 'relocate.net.dv8tion.jda'
+    relocate 'org.apache.commons.codec', 'relocate.org.apache.commons.codec'
+    relocate 'org.apache.commons.lang3', 'relocate.org.apache.commons.lang3'
+    relocate 'org.json', 'relocate.org.json'
+    relocate 'org.apache.http', 'relocate.org.apache.http'
+    relocate 'org.apache.commons.logging', 'relocate.org.apache.commons.logging'
+    relocate 'com.iwebpp.crypto', 'relocate.com.iwebpp.crypto'
+
+    // remove the exludes to include files required for audio
+    exclude 'natives/'
+    exclude 'tomp2p/opuswrapper/'
+    exclude 'org/tritonus/'
+
+    // uncomment the following lines to also relocate the audio libs if included
+    // relocate 'javax.sound', 'relocate.javax.sound'
+    // relocate 'tomp2p.opuswrapper', 'relocate.tomp2p.opuswrapper'
+    // relocate 'net.sourceforge.jaad', 'relocate.net.sourceforge.jaad'
+    // relocate 'javazoom', 'relocate.javazoom'
+    // relocate 'org.kc7bfi.jflac', 'relocate.org.kc7bfi.jflac'
+    // relocate 'org.tritonus', 'relocate.org.tritonus'
+}
+
+jar {
+    dependsOn shadowJar
+    enabled = false
+}
+
+artifacts {
+    archives shadowJar
 }
