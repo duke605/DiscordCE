@@ -96,7 +96,6 @@ public class DiscordCE
                 if (HttpUtil.isOk(r.getStatus()))
                     token = tempToken;
             }
-
         }
         catch (FileNotFoundException ex) {}
         catch (Exception ex)
