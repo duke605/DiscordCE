@@ -11,7 +11,6 @@ public class Config {
 
     // Credentials
     public static String email;
-    public static String password;
 
     // Display
     public static String directLayout;
@@ -47,11 +46,6 @@ public class Config {
                 , CATEGORY_CREDENTIALS
                 , ""
                 , "Your DiscordCE email.");
-
-        password = instance.getString("password"
-                , CATEGORY_CREDENTIALS
-                , ""
-                , "Your DiscordCE password.");
 
         directLayout = instance.getString("directLayout"
                 , CATEGORY_DISPLAY

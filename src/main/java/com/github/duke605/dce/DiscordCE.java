@@ -7,8 +7,16 @@ import com.github.duke605.dce.lib.Config;
 import com.github.duke605.dce.lib.Preferences;
 import com.github.duke605.dce.lib.Reference;
 import com.github.duke605.dce.util.ConcurrentUtil;
+import com.github.duke605.dce.util.HttpUtil;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.sun.deploy.xml.BadTokenException;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
+import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +29,9 @@ import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 
 @Mod(
         modid = Reference.MODID,
@@ -51,15 +62,75 @@ public class DiscordCE
     @Mod.EventHandler
     public void init(FMLInitializationEvent e)
     {
+        String token = null;
+
+        // Checking if we have their token
+        try
+        {
+            File tokenFile = new File("tokens.json");
+            String tempToken;
+
+            // Checking if the file exists
+            if (!tokenFile.exists())
+                throw new FileNotFoundException();
+
+            // Reading from the file
+            try (JsonReader in = new JsonReader(new InputStreamReader(new FileInputStream(tokenFile))))
+            {
+                // Getting the tokens object
+                JsonObject tokens = new JsonParser().parse(in).getAsJsonObject();
+
+                // Checking if it contains the current players email
+                if (tokens.has(Config.email))
+                    tempToken = tokens.get(Config.email).getAsString();
+                else
+                    throw new FileNotFoundException();
+
+                // Checking if token is valid
+                HttpResponse r = Unirest.get(Requester.DISCORD_API_PREFIX+"users/@me/guilds")
+                        .header("authorization", tempToken)
+                        .header("user-agent", Requester.USER_AGENT)
+                        .asString();
+
+                // Checking if good
+                if (HttpUtil.isOk(r.getStatus()))
+                    token = tempToken;
+            }
+
+        }
+        catch (FileNotFoundException ex) {}
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
         // Connecting
         try
         {
-            new JDAClientBuilder()
+            // Building client
+            JDAClientBuilder b = new JDAClientBuilder()
                     .addListener(new DiscordEventHandler())
-                    .setEmail(Config.email)
-                    .setPassword(Config.password)
-                    .setAudioEnabled(false)
-                    .buildAsync();
+                    .setAudioEnabled(false);
+
+            // Checking if MFA code is needed
+            if (token == null)
+            {
+                // Setting email
+                b.setEmail(Config.email);
+
+                // Getting user password
+                b.setPassword(JOptionPane.showInputDialog(null, "Please enter your password for " + Config.email));
+
+                // Getting MFA Code
+                b.setCode(JOptionPane.showInputDialog(null, "Please enter the token from your two-factor " +
+                        "authentication mobile app.\nIf you do not use two-factor authentication please press \"OK.\""));
+            }
+
+            // Token already gotten no need to get MFA code or password
+            else
+                b.setClientToken(token);
+
+            b.buildAsync();
         }
         catch (Exception ex)
         {
