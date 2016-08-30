@@ -2,6 +2,8 @@
 [![Direct Download](http://i.imgur.com/tpqZBQT.png)](https://minecraft.curseforge.com/projects/discordce) [![Adfly Download](http://i.imgur.com/MODggaT.png)](http://adf.ly/1163184/https://minecraft.curseforge.com/projects/discordce)
 
 ![commands](https://i.imgur.com/mYz3q6Q.png)
+--------------------------------------------
+
 ###Press *Y* to bring up DiscordCE's GUI.
 ```
 // <message> - Allows you to chat to the a chosen Discord channel if you have permissions to send messages to it.
@@ -28,6 +30,7 @@
 /unblock <user_id> - Allows you to unblock a discord user.
 ```
 ![Images](https://i.imgur.com/2DkWHT5.png)
+------------------------------------------
 
 ![Guild list](https://i.imgur.com/sXLhlwx.png)
 
@@ -43,10 +46,13 @@
 ![Chat](https://i.imgur.com/9I6qXuz.png)
 
 ![Requirements](http://i.imgur.com/uvdpPEp.png)
+-----------------------------------------------
+
 - Java 8
-- Minecraft Forge 12.18.1.*
+- Minecraft Forge 11.15.1.*
 
 ![Legal](https://i.imgur.com/8XOX2gg.png)
+-----------------------------------------
 
 ```
 This Minecraft modification is not affiliated with, maintained, authorized, endorsed or sponsored by Discord or any of its affiliates.
