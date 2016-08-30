@@ -47,6 +47,11 @@ repositories {
 }
 
 dependencies {
+    compile ('com.mixpanel:mixpanel-java:1.4.4') {
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'org.json', module: 'json'
+    }
+
     compile ('net.dv8tion:JDA-Client:0.2.0_9') {
         // we don't want junit as runtime dependency, it's unneeded
         exclude group: 'junit', module: 'junit'
@@ -87,16 +92,17 @@ task wrapper(type: Wrapper) {
 
 shadowJar {
     classifier = ''
-    relocate 'com.mashape.unirest', 'relocate.com.mashape.unirest'
-    relocate 'com.neovisionaries.ws.client', 'relocate.com.neovisionaries.ws.client'
-    relocate 'com.sun.jna', 'relocate.com.sun.jna'
-    relocate 'net.dv8tion.jda', 'relocate.net.dv8tion.jda'
-    relocate 'org.apache.commons.codec', 'relocate.org.apache.commons.codec'
-    relocate 'org.apache.commons.lang3', 'relocate.org.apache.commons.lang3'
-    relocate 'org.json', 'relocate.org.json'
-    relocate 'org.apache.http', 'relocate.org.apache.http'
-    relocate 'org.apache.commons.logging', 'relocate.org.apache.commons.logging'
-    relocate 'com.iwebpp.crypto', 'relocate.com.iwebpp.crypto'
+    relocate 'com.mashape.unirest', 'com.github.duke605.dce.relocate.com.mashape.unirest'
+    relocate 'com.neovisionaries.ws.client', 'com.github.duke605.dce.relocate.com.neovisionaries.ws.client'
+    relocate 'com.sun.jna', 'com.github.duke605.dce.relocate.com.sun.jna'
+    relocate 'net.dv8tion.jda', 'com.github.duke605.dce.relocate.net.dv8tion.jda'
+    relocate 'org.apache.commons.codec', 'com.github.duke605.dce.relocate.org.apache.commons.codec'
+    relocate 'org.apache.commons.lang3', 'com.github.duke605.dce.relocate.org.apache.commons.lang3'
+    relocate 'org.json', 'com.github.duke605.dce.relocate.org.json'
+    relocate 'org.apache.http', 'com.github.duke605.dce.relocate.org.apache.http'
+    relocate 'org.apache.commons.logging', 'com.github.duke605.dce.relocate.org.apache.commons.logging'
+    relocate 'com.iwebpp.crypto', 'com.github.duke605.dce.relocate.com.iwebpp.crypto'
+    relocate 'com.mixpanel', 'com.github.duke605.dce.relocate.com.mixpanel'
 
     // remove the exludes to include files required for audio
     exclude 'natives/'
@@ -104,12 +110,12 @@ shadowJar {
     exclude 'org/tritonus/'
 
     // uncomment the following lines to also relocate the audio libs if included
-    // relocate 'javax.sound', 'relocate.javax.sound'
-    // relocate 'tomp2p.opuswrapper', 'relocate.tomp2p.opuswrapper'
-    // relocate 'net.sourceforge.jaad', 'relocate.net.sourceforge.jaad'
-    // relocate 'javazoom', 'relocate.javazoom'
-    // relocate 'org.kc7bfi.jflac', 'relocate.org.kc7bfi.jflac'
-    // relocate 'org.tritonus', 'relocate.org.tritonus'
+    // relocate 'javax.sound', 'com.github.duke605.dce.relocate.javax.sound'
+    // relocate 'tomp2p.opuswrapper', 'com.github.duke605.dce.relocate.tomp2p.opuswrapper'
+    // relocate 'net.sourceforge.jaad', 'com.github.duke605.dce.relocate.net.sourceforge.jaad'
+    // relocate 'javazoom', 'com.github.duke605.dce.relocate.javazoom'
+    // relocate 'org.kc7bfi.jflac', 'com.github.duke605.dce.relocate.org.kc7bfi.jflac'
+    // relocate 'org.tritonus', 'com.github.duke605.dce.relocate.org.tritonus'
 }
 
 jar {

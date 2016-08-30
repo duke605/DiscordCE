@@ -17,7 +17,8 @@ public class GuiDiscordConfig extends GuiConfig
                 , Arrays.asList(
                         new ConfigElement(Config.instance.getCategory(Config.CATEGORY_COLOUR)),
                         new ConfigElement(Config.instance.getCategory(Config.CATEGORY_DISPLAY)),
-                        new ConfigElement(Config.instance.getCategory(Configuration.CATEGORY_GENERAL))
+                        new ConfigElement(Config.instance.getCategory(Configuration.CATEGORY_GENERAL)),
+                        new ConfigElement(Config.instance.getCategory(Config.CATEGORY_PRIVACY))
                 )
                 , Reference.MODID
                 , false

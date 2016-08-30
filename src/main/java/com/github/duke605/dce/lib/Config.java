@@ -1,8 +1,10 @@
 package com.github.duke605.dce.lib;
 
 import net.minecraftforge.common.config.Configuration;
+import org.apache.commons.codec.binary.Hex;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.util.HashMap;
 
 public class Config {
@@ -10,6 +12,7 @@ public class Config {
     public static Configuration instance;
 
     // Credentials
+    public static String emailHash;
     public static String email;
 
     // Display
@@ -32,9 +35,13 @@ public class Config {
     public static boolean achievementMessages;
     public static boolean demiseImage;
 
+    // Tracking
+    public static boolean trackSignOn;
+
     public static final String CATEGORY_CREDENTIALS = "credentials";
     public static final String CATEGORY_DISPLAY = "display";
     public static final String CATEGORY_COLOUR = "colours";
+    public static final String CATEGORY_PRIVACY = "privacy";
 
     public static void load(File file) {
         if (instance == null)
@@ -151,6 +158,12 @@ public class Config {
                 , "When you die an screenshot will be taken and sent to the channel you are currently talking to if\n" +
                         "value is set to true.");
 
+        trackSignOn = instance.getBoolean("trackSignOn"
+                , CATEGORY_PRIVACY
+                , true
+                , "Tracks when you start up a game of Minecarft. All data is submitted using your SHA1 hashed email so\n" +
+                        "for all intents and purposes you remain anonymous and you email remains safe.");
+
         // Separating server overrides
         for(String o : sno) {
             String[] a = o.split("::");
@@ -164,6 +177,16 @@ public class Config {
         }
 
         instance.save();
+
+        // Hashing email
+        try
+        {
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            emailHash = Hex.encodeHexString(md.digest(email.getBytes()));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

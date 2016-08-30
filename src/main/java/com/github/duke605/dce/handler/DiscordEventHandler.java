@@ -12,6 +12,10 @@ import com.github.duke605.dce.lib.VolatileSettings;
 import com.github.duke605.dce.util.ConcurrentUtil;
 import com.github.duke605.dce.util.DiscordUtil;
 import com.github.duke605.dce.util.MCHelper;
+import com.github.duke605.dce.util.MixpanelUtil;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.utils.Base64Coder;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.entities.impl.JDAClientImpl;
@@ -29,6 +33,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class DiscordEventHandler extends CustomListenerAdapter {
 
@@ -68,7 +78,55 @@ public class DiscordEventHandler extends CustomListenerAdapter {
         });
 
         // Adding hook to shutdown dce when user exists
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> DiscordCE.client.shutdown(true)));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            DiscordCE.client.shutdown(true);
+
+            // Sending Stop Game track
+            if (Config.trackSignOn)
+            {
+                TimeZone tz = Calendar.getInstance().getTimeZone();
+                Date now = Calendar.getInstance().getTime();
+                String time = new SimpleDateFormat("EEEE, MMMM d, YYYY h:mma").format(now);
+                long gameTime = System.currentTimeMillis() - DiscordCE.startTime;
+                String formattedGameTime;
+
+                if (gameTime < 60 * 1000)
+                    formattedGameTime = Math.round(gameTime / 1000.0) + "s";
+                else if (gameTime < 60 * 60 * 1000)
+                {
+                    int mins = (int) Math.floor(gameTime / 60000.0);
+                    int secs = (int) Math.round((gameTime % 60000.0) / 1000.0);
+
+                    formattedGameTime = mins + "m" + secs + "s";
+                }
+                else if (gameTime < 60 * 60 * 24 * 1000)
+                {
+                    int hrs  = (int) Math.floor(gameTime / 120000.0);
+                    int mins = (int) Math.floor((gameTime % 120000.0) / 60000.0);
+                    int secs = (int) Math.round(((gameTime % 120000.0) % 60000.0) / 1000.0);
+
+                    formattedGameTime = hrs + "h" + mins + "m" + secs + "s";
+                }
+                else
+                {
+                    int days = (int) Math.floor(gameTime / 86400000.0);
+                    int hrs  = (int) Math.floor((gameTime % 86400000.0) / 120000.0);
+                    int mins = (int) Math.floor(((gameTime % 86400000.0) % 120000.0) / 60000.0);
+                    int secs = (int) Math.round((((gameTime % 86400000.0) % 120000.0) % 60000.0) / 1000.0);
+
+                    formattedGameTime = days + "d" + hrs + "h" + mins + "m" + secs + "s";
+                }
+
+                JSONObject props = new JSONObject()
+                        .put("timezone", tz.getDisplayName(Locale.CANADA))
+                        .put("game_time", gameTime)
+                        .put("game_time_formatted", formattedGameTime)
+                        .put("local_timestamp", now.getTime())
+                        .put("local_time", time);
+
+                MixpanelUtil.sendEvent("Stop Game", Config.emailHash, props);
+            }
+        }));
     }
 
     @Override

@@ -8,12 +8,13 @@ import com.github.duke605.dce.lib.Preferences;
 import com.github.duke605.dce.lib.Reference;
 import com.github.duke605.dce.util.ConcurrentUtil;
 import com.github.duke605.dce.util.HttpUtil;
+import com.github.duke605.dce.util.MixpanelUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.sun.deploy.xml.BadTokenException;
+import com.mixpanel.mixpanelapi.MixpanelAPI;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.requests.Requester;
@@ -25,6 +26,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.json.JSONObject;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
@@ -32,6 +35,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @Mod(
         modid = Reference.MODID,
@@ -45,6 +53,9 @@ public class DiscordCE
 
     @Mod.Instance(Reference.MODID)
     public static DiscordCE instance;
+
+    // Mod start time
+    public static long startTime = System.currentTimeMillis();
 
     // Will be set when ready event called
     public static volatile JDAClient client;
@@ -154,5 +165,20 @@ public class DiscordCE
         ClientRegistry.registerKeyBinding(test = new KeyBinding("Open DiscordCE menu", Keyboard.KEY_Y, "DiscordCE"));
 
         MinecraftForge.EVENT_BUS.register(new MinecraftEventHandler());
+
+        // Tracking sign on
+        if (Config.trackSignOn)
+            ConcurrentUtil.executor.execute(() -> {
+                TimeZone tz = Calendar.getInstance().getTimeZone();
+                Date now = Calendar.getInstance().getTime();
+                String time = new SimpleDateFormat("EEEE, MMMM d, YYYY h:mma").format(now);
+
+                JSONObject props = new JSONObject()
+                        .put("timezone", tz.getDisplayName(Locale.CANADA))
+                        .put("local_timestamp", new Date().getTime())
+                        .put("local_time", time);
+
+                MixpanelUtil.sendEvent("Start Game", Config.emailHash, props);
+            });
     }
 }
