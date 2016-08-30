@@ -1,5 +1,5 @@
 ![logo](https://i.imgur.com/To6v0oa.png)
-[![](http://i.imgur.com/FiKSYdm.png)](https://mods.curse.com/mc-mods/minecraft/250473-discordce/2327221)
+[![](http://i.imgur.com/FiKSYdm.png)](https://minecraft.curseforge.com/projects/discordce)
 
 ![commands](https://i.imgur.com/mYz3q6Q.png)
 ###Press *Y* to bring up DiscordCE's GUI.
