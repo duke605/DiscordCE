@@ -126,9 +126,11 @@ public class DiscordCE
             // Checking if MFA code is needed
             if (token == null)
             {
+                String email = null;
+
                 // Setting email
                 b.setEmail(Config.email.trim().isEmpty()
-                    ? JOptionPane.showInputDialog(null, "Please enter your email address.")
+                    ? email = JOptionPane.showInputDialog(null, "Please enter your email address.")
                     : Config.email);
 
                 // Getting user password
@@ -137,6 +139,14 @@ public class DiscordCE
                 // Getting MFA Code
                 b.setCode(JOptionPane.showInputDialog(null, "Please enter the token from your two-factor " +
                         "authentication mobile app.\nIf you do not use two-factor authentication please press \"OK.\""));
+
+                // Saving email in config
+                if (email != null)
+                {
+                    Config.emailProp.set(email);
+                    Config.emailHash = Config.hash(email);
+                    Config.instance.save();
+                }
             }
 
             // Token already gotten no need to get MFA code or password

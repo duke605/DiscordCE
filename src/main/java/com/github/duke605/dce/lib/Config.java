@@ -1,6 +1,7 @@
 package com.github.duke605.dce.lib;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.File;
@@ -14,6 +15,7 @@ public class Config {
     // Credentials
     public static String emailHash;
     public static String email;
+    public static Property emailProp;
 
     // Display
     public static String directLayout;
@@ -49,10 +51,12 @@ public class Config {
 
         instance.load();
 
-        email = instance.getString("email"
-                , CATEGORY_CREDENTIALS
+        emailProp = instance.get(CATEGORY_CREDENTIALS
+                , "email"
                 , ""
                 , "Your DiscordCE email.");
+
+        email = emailProp.getString();
 
         directLayout = instance.getString("directLayout"
                 , CATEGORY_DISPLAY
@@ -178,15 +182,19 @@ public class Config {
 
         instance.save();
 
-        // Hashing email
+        emailHash = hash(email);
+    }
+
+    public static String hash(String s)
+    {
+        // Hashing String
         try
         {
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            emailHash = Hex.encodeHexString(md.digest(email.getBytes()));
+            return Hex.encodeHexString(MessageDigest.getInstance("SHA1").digest(s.getBytes()));
         }
         catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
-
 }
