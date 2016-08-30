@@ -42,6 +42,10 @@
 
 ![Chat](https://i.imgur.com/9I6qXuz.png)
 
+![Requirements](http://i.imgur.com/uvdpPEp.png)
+- Java 8
+- Minecraft Forge 12.18.1.*
+
 ![Legal](https://i.imgur.com/8XOX2gg.png)
 
 ```
