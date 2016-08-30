@@ -6,11 +6,11 @@ import com.github.duke605.dce.gui.abstraction.GuiEntry;
 import com.github.duke605.dce.lib.Config;
 import com.github.duke605.dce.lib.VolatileSettings;
 import com.github.duke605.dce.util.*;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.image.BufferedImage;
@@ -140,7 +140,7 @@ public class GuiUserList extends GuiEmbeddedList
 
             // Coloring username
             if (user.getId().equals("136856172203474944"))
-                name = TextFormatting.YELLOW + name;
+                name = ChatFormatting.YELLOW + name;
             else if (VolatileSettings.isFriend(user.getId()))
                 name = "\u00a7" + Config.friendColour + name;
 

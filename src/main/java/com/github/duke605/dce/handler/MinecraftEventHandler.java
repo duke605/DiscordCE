@@ -7,6 +7,7 @@ import com.github.duke605.dce.lib.Preferences;
 import com.github.duke605.dce.lib.Reference;
 import com.github.duke605.dce.util.ConcurrentUtil;
 import com.github.duke605.dce.util.MCHelper;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
@@ -15,10 +16,8 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ScreenShotHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentBase;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
@@ -37,7 +36,7 @@ import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.Queue;
-import java.util.concurrent.*;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 public class MinecraftEventHandler
@@ -49,7 +48,7 @@ public class MinecraftEventHandler
      @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
     {
-        if (e.isLocal())
+        if (e.isLocal)
             ConcurrentUtil.executor.execute(() ->
                     DiscordCE.client.getAccountManager().setGame("Minecraft [SP]"));
         else
@@ -77,7 +76,7 @@ public class MinecraftEventHandler
             return;
 
         GuiChat gui = (GuiChat) Minecraft.getMinecraft().currentScreen;
-        GuiTextField field = ReflectionHelper.getPrivateValue(GuiChat.class, gui, 4);
+        GuiTextField field = ReflectionHelper.getPrivateValue(GuiChat.class, gui, 7);
 
         // Players is typing in command and not sending message
         if (field.getText().isEmpty() || !field.getText().startsWith("//"))
@@ -104,16 +103,16 @@ public class MinecraftEventHandler
     public void onPlayerDeathMessage(LivingDeathEvent e)
     {
         if (!Config.deathMessages
-                || !(e.getEntityLiving() instanceof EntityPlayer)
-                || e.getEntityLiving().getUniqueID() != Minecraft.getMinecraft().thePlayer.getUniqueID())
+                || !(e.entityLiving instanceof EntityPlayer)
+                || e.entityLiving.getUniqueID() != Minecraft.getMinecraft().thePlayer.getUniqueID())
             return;
 
         // Getting discord and minecraft user
-        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+        EntityPlayer player = (EntityPlayer) e.entityLiving;
         User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
 
         // Getting death message
-        String deathMessage = e.getSource().getDeathMessage(e.getEntityLiving()).getUnformattedText();
+        String deathMessage = e.source.getDeathMessage(e.entityLiving).getUnformattedText();
 
         // Replacing minecraft name with discord name
         deathMessage = deathMessage.replaceAll(player.getDisplayNameString(), me.getAsMention());
@@ -128,7 +127,7 @@ public class MinecraftEventHandler
     {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-        if (!(e.getGui() instanceof GuiGameOver)
+        if (!(e.gui instanceof GuiGameOver)
                 || !Config.demiseImage
                 || player == null
                 || player.getHealth() <= 0F)
@@ -139,11 +138,11 @@ public class MinecraftEventHandler
         {
             User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
             Minecraft mc = Minecraft.getMinecraft();
-            ITextComponent t = ScreenShotHelper.saveScreenshot(mc.mcDataDir,
+            IChatComponent t = ScreenShotHelper.saveScreenshot(mc.mcDataDir,
                     mc.displayWidth,
                     mc.displayHeight,
                     mc.getFramebuffer());
-            String fileName = new JSONObject(TextComponentBase.Serializer.componentToJson(t)).getJSONArray("with")
+            String fileName = new JSONObject(IChatComponent.Serializer.componentToJson(t)).getJSONArray("with")
                     .getJSONObject(0).getJSONObject("clickEvent").getString("value");
             File file = new File(fileName);
             TextChannel c = DiscordCE.client.getTextChannelById(Preferences.i.usingChannel);
@@ -167,18 +166,18 @@ public class MinecraftEventHandler
     public void onAchievement(AchievementEvent e)
     {
         if (!Config.achievementMessages
-                || !(e.getEntityLiving() instanceof EntityPlayer)
-                || e.getEntityLiving().getUniqueID() != Minecraft.getMinecraft().thePlayer.getUniqueID())
+                || !(e.entityLiving instanceof EntityPlayer)
+                || e.entityLiving.getUniqueID() != Minecraft.getMinecraft().thePlayer.getUniqueID())
             return;
 
         // Getting discord and minecraft user
-        EntityPlayer player = (EntityPlayer) e.getEntityLiving();
+        EntityPlayer player = (EntityPlayer) e.entityLiving;
         User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
 
         // Getting unlocked ac
         String aString = me.getAsMention() +
                 " has just earned the achievement \"" +
-                e.getAchievement().getStatName().getUnformattedComponentText() + ".\"";
+                e.achievement.getStatName().getUnformattedComponentText() + ".\"";
 
         // Sending death message
         DiscordCE.client.getTextChannelById(Preferences.i.usingChannel).sendMessageAsync(aString, null);
@@ -188,7 +187,7 @@ public class MinecraftEventHandler
     @SideOnly(Side.CLIENT)
     public void onPostConfigChange(ConfigChangedEvent.PostConfigChangedEvent e)
     {
-        if (!e.getModID().equals(Reference.MODID))
+        if (!e.modID.equals(Reference.MODID))
             return;
 
         // Loading the configurations again
@@ -196,7 +195,7 @@ public class MinecraftEventHandler
         Config.load(null);
 
         // Telling player configs were changed
-        MCHelper.sendMessage(TextFormatting.GRAY + "Configurations updated.");
+        MCHelper.sendMessage(ChatFormatting.GRAY + "Configurations updated.");
     }
 
     @SubscribeEvent

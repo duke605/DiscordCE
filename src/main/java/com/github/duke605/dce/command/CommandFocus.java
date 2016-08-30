@@ -22,15 +22,13 @@ public class CommandFocus extends CommandBase
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer s, ICommandSender ss)
+    public boolean func_71519_b(ICommandSender ss)
     {
         return true;
     }
 
     @Override
-    public void execute(MinecraftServer s,
-                        ICommandSender ss,
-                        String[] args) throws CommandException
+    public void func_71515_b(ICommandSender ss, String[] args) throws CommandException
     {
         // toggling focus
         Preferences.i.focus = !Preferences.i.focus;

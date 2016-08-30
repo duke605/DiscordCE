@@ -13,9 +13,6 @@ import com.github.duke605.dce.util.ConcurrentUtil;
 import com.github.duke605.dce.util.DiscordUtil;
 import com.github.duke605.dce.util.MCHelper;
 import com.github.duke605.dce.util.MixpanelUtil;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.utils.Base64Coder;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.entities.impl.JDAClientImpl;
@@ -30,7 +27,7 @@ import net.dv8tion.jda.events.user.UserOnlineStatusUpdateEvent;
 import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.*;
+import net.minecraft.util.IChatComponent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -168,7 +165,7 @@ public class DiscordEventHandler extends CustomListenerAdapter {
         Minecraft
                 .getMinecraft()
                 .thePlayer
-                .addChatComponentMessage(TextComponentBase.Serializer.jsonToComponent(message));
+                .addChatComponentMessage(IChatComponent.Serializer.jsonToComponent(message));
     }
 
     @Override
@@ -195,7 +192,7 @@ public class DiscordEventHandler extends CustomListenerAdapter {
         Minecraft
                 .getMinecraft()
                 .thePlayer
-                .addChatComponentMessage(TextComponentBase.Serializer.jsonToComponent(message));
+                .addChatComponentMessage(IChatComponent.Serializer.jsonToComponent(message));
     }
 
     @Override

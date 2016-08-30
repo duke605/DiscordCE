@@ -29,9 +29,13 @@ public class CommandDM extends CommandBase
     }
 
     @Override
-    public void execute(MinecraftServer s,
-                        ICommandSender ss,
-                        String[] args) throws CommandException
+    public boolean func_71519_b(ICommandSender p_71519_1_)
+    {
+        return true;
+    }
+
+    @Override
+    public void func_71515_b(ICommandSender ss, String[] args) throws CommandException
     {
         String userId = args[0];
         String message = Arrays.join(java.util.Arrays.copyOfRange(args, 1, args.length), " ");

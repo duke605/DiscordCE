@@ -7,13 +7,13 @@ import com.github.duke605.dce.gui.abstraction.GuiListButton;
 import com.github.duke605.dce.lib.Preferences;
 import com.github.duke605.dce.util.Arrays;
 import com.github.duke605.dce.util.DiscordUtil;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Channel;
 import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class GuiChannelList extends GuiEmbeddedList
             // Mute channel
             guiButtons.add(b = new GuiListButton(0, getListWidth() - 45, 0, 45, 20
                     , Preferences.i.mutedChannels.contains(channel.getId())
-                        ? TextFormatting.RED + "Unmute"
+                        ? ChatFormatting.RED + "Unmute"
                         : "Mute"));
 
             // Disabling switch if its the current channel
@@ -117,7 +117,7 @@ public class GuiChannelList extends GuiEmbeddedList
                     Preferences.i.mutedChannels.remove(channel.getId());
 
                 b.displayString = Preferences.i.mutedChannels.contains(channel.getId())
-                        ? TextFormatting.RED + "Unmute"
+                        ? ChatFormatting.RED + "Unmute"
                         : "Mute";
             }
 

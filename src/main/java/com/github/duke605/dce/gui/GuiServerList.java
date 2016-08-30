@@ -8,13 +8,13 @@ import com.github.duke605.dce.lib.Preferences;
 import com.github.duke605.dce.lib.VolatileSettings;
 import com.github.duke605.dce.util.Arrays;
 import com.github.duke605.dce.util.DrawingUtils;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.dv8tion.jda.entities.Guild;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class GuiServerList extends GuiEmbeddedList
             // Mute server
             guiButtons.add(b = new GuiListButton(0, getListWidth() - 45, 0, 45, 20
                     , Preferences.i.mutedGuilds.contains(guild.getId())
-                        ? TextFormatting.RED + "Unmute"
+                        ? ChatFormatting.RED + "Unmute"
                         : "Mute"));
 
             guiButtons.add(new GuiListButton(1, getListWidth() - 90, 0, 45, 20, "Leave"));
@@ -122,7 +122,7 @@ public class GuiServerList extends GuiEmbeddedList
                     Preferences.i.mutedGuilds.remove(guild.getId());
 
                 b.displayString = Preferences.i.mutedGuilds.contains(guild.getId())
-                        ? TextFormatting.RED + "Unmute"
+                        ? ChatFormatting.RED + "Unmute"
                         : "Mute";
             }
 

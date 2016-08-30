@@ -14,13 +14,13 @@ import com.github.duke605.dce.util.MCHelper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mojang.realmsclient.gui.ChatFormatting;
 import net.dv8tion.jda.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.TextFormatting;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -147,16 +147,16 @@ public class GuiServers extends GuiListContainer
 
                     if (r.getStatus() <= 199 || r.getStatus() >= 300) {
                         if (r.getStatus() == 404)
-                            MCHelper.sendMessage(TextFormatting.RED + "That invite is expired or invalid.");
+                            MCHelper.sendMessage(ChatFormatting.RED + "That invite is expired or invalid.");
                         else
-                            MCHelper.sendMessage(TextFormatting.RED + r.getStatusText());
+                            MCHelper.sendMessage(ChatFormatting.RED + r.getStatusText());
                         return;
                     }
 
                     mc.displayGuiScreen(this);
                 } catch (UnirestException e)
                 {
-                    MCHelper.sendMessage(TextFormatting.RED + e.getMessage());
+                    MCHelper.sendMessage(ChatFormatting.RED + e.getMessage());
                 }
             }, "", "Enter an Instant Invite and join your friend's guild."));
         }

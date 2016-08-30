@@ -6,9 +6,8 @@ import net.dv8tion.jda.entities.Channel;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentBase;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +24,7 @@ public class MCHelper {
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
 
-        Minecraft.getMinecraft().thePlayer.addChatMessage(new TextComponentString(message));
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
     }
 
     /**
@@ -39,7 +38,7 @@ public class MCHelper {
                 || Minecraft.getMinecraft().thePlayer == null)
             return;
 
-        ITextComponent component = TextComponentBase.Serializer.jsonToComponent(message.toString());
+        IChatComponent component = IChatComponent.Serializer.jsonToComponent(message.toString());
         Minecraft.getMinecraft().thePlayer.addChatMessage(component);
     }
 
