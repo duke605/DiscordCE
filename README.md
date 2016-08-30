@@ -1,4 +1,49 @@
-# License
+![logo](https://i.imgur.com/To6v0oa.png)
+![commands](https://i.imgur.com/mYz3q6Q.png)
+```
+// <message> - Allows you to chat to the a chosen Discord channel if you have permissions to send messages to it.
+```
+```
+/// <user_id> <message - Allows you do direct message a user. The user id can be obtained by shift clicking one of the users name in one of their recent messages in the chat window.
+```
+```
+/switchChannel <channel_id> - Allows you to change what channel to are sending messages to. The channel id can be obtained by shift clicking the channel name in a recent message in the chat window.
+```
+```
+/focus - Allows you to only direct messages and messages from the channel you are currently sending to.
+```
+```
+/addFriend <user_id> - Allows you to add a discord user as a friend. Can also be used to accept incoming friend requests.
+```
+```
+/deleteFriend <user_id> - Allows you to remove a discord user as a friend. Can also be used to cancel an out going friend request or ignore an incoming one.
+```
+```
+/block <user_id> - Allows you to block a discord user.
+```
+```
+/unblock <user_id> - Allows you to unblock a discord user.
+```
+![Images](https://i.imgur.com/2DkWHT5.png)
+
+![Guild list](https://i.imgur.com/sXLhlwx.png)
+
+![Relationships (Pending)](https://i.imgur.com/eo9kmuQ.png)
+
+![User list (Searching)](https://i.imgur.com/7u64k2P.png)
+
+
+![User list (searching gif)](https://i.imgur.com/b2H0oSp.gif)
+
+![Channel list](https://i.imgur.com/BF58dWR.gif)
+
+![Chat](https://i.imgur.com/9I6qXuz.png)
+
+![Legal](https://i.imgur.com/8XOX2gg.png)
+
+```
+This Minecraft modification is not affiliated with, maintained, authorized, endorsed or sponsored by Discord or any of its affiliates.
+```
 ```
 MIT License
 
@@ -20,4 +65,5 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.```
+SOFTWARE.
+```
