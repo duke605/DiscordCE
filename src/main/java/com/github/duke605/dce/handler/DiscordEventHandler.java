@@ -124,7 +124,7 @@ public class DiscordEventHandler extends CustomListenerAdapter {
                         .put("local_timestamp", now.getTime())
                         .put("local_time", time);
 
-                MixpanelUtil.sendEvent("Stop Game", Config.emailHash, props);
+                MixpanelUtil.sendEvent("Stop Game", props);
             }
         }));
     }

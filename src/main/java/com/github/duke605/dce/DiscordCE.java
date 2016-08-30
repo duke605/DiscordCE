@@ -20,6 +20,7 @@ import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -126,7 +127,9 @@ public class DiscordCE
             if (token == null)
             {
                 // Setting email
-                b.setEmail(Config.email);
+                b.setEmail(Config.email.trim().isEmpty()
+                    ? JOptionPane.showInputDialog(null, "Please enter your email address.")
+                    : Config.email);
 
                 // Getting user password
                 b.setPassword(JOptionPane.showInputDialog(null, "Please enter your password for " + Config.email));
@@ -174,11 +177,13 @@ public class DiscordCE
                 String time = new SimpleDateFormat("EEEE, MMMM d, YYYY h:mma").format(now);
 
                 JSONObject props = new JSONObject()
+                        .put("forge_version", ForgeVersion.getVersion())
+                        .put("mc_version", MinecraftForge.MC_VERSION)
                         .put("timezone", tz.getDisplayName(Locale.CANADA))
                         .put("local_timestamp", new Date().getTime())
                         .put("local_time", time);
 
-                MixpanelUtil.sendEvent("Start Game", Config.emailHash, props);
+                MixpanelUtil.sendEvent("Start Game", props);
             });
     }
 }
