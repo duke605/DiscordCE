@@ -1,6 +1,5 @@
 ![logo](https://i.imgur.com/To6v0oa.png)
-<iframe src="http://widget.mcf.li/mc-mods/minecraft/250473-discordce?version=1.10.2" width="100%" style="border:none">
-</iframe>
+[![](http://i.imgur.com/FiKSYdm.png)](https://mods.curse.com/mc-mods/minecraft/250473-discordce/2327221)
 
 ![commands](https://i.imgur.com/mYz3q6Q.png)
 ```
