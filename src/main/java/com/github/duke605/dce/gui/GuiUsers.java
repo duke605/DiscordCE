@@ -225,6 +225,7 @@ public class GuiUsers extends GuiListContainer
         this.drawDefaultBackground();
         userList.drawScreen(x, y, f);
         search.drawTextBox();
+        drawCenteredString(mc.fontRendererObj, "Users", width / 2, 9, 0xFFFFFFFF);
         super.drawScreen(x, y, f);
     }
 

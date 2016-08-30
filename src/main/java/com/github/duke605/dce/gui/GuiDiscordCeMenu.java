@@ -23,9 +23,10 @@ public class GuiDiscordCeMenu extends GuiScreen
         this.buttonList.add(new GuiButton(-1, this.width / 2 - 100, this.height / 4 + 24 + -16, I18n.format("menu.returnToGame")));
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 48 + -16, 98, 20, "Guilds"));
         this.buttonList.add(new GuiButton(1, this.width / 2 + 2, this.height / 4 + 48 + -16, 98, 20, "Relationships"));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 72 + -16, 98, 20, "Configurations"));
-        this.buttonList.add(new GuiButton(3, this.width / 2 + 2, this.height / 4 + 72 + -16, 98, 20, "Users"));
-        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 96 + -16, "Report an Issue"));
+        this.buttonList.add(new GuiButton(5, this.width / 2 - 100, this.height / 4 + 72 + -16, "Report an Issue"));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 100, this.height / 4 + 96 + -16, 98, 20, "Configurations"));
+        this.buttonList.add(new GuiButton(3, this.width / 2 + 2, this.height / 4 + 96 + -16, 98, 20, "Users"));
+        this.buttonList.add(new GuiButton(6, this.width / 2 - 100, this.height / 4 + 120 + -16, "Go to Site"));
     }
 
     @Override
@@ -75,5 +76,9 @@ public class GuiDiscordCeMenu extends GuiScreen
         // Report issue
         else if (b.id == 5)
             Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE/issues"));
+
+        // Go to github
+        else if (b.id == 6)
+            Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE"));
     }
 }

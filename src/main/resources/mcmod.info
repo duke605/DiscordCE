@@ -5,7 +5,7 @@
   "description": "Allows you to chat and manage your friends list on Discord.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/discordce",
   "updateUrl": "",
   "authorList": ["Duke605"],
   "credits": "DV8FromTheWorld for making JDA-Client\nAlmighty Alpaca for casting spells on my gradle build file to make it spit out a functioning .jar file\nThe Discord team for making and awesome and free service.",
