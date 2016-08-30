@@ -2,6 +2,8 @@
 [![](http://i.imgur.com/FiKSYdm.png)](https://mods.curse.com/mc-mods/minecraft/250473-discordce/2327221)
 
 ![commands](https://i.imgur.com/mYz3q6Q.png)
+
+####Press *Y* to bring up DiscordCE's GUI.
 ```
 // <message> - Allows you to chat to the a chosen Discord channel if you have permissions to send messages to it.
 ```
