@@ -1,4 +1,7 @@
 ![logo](https://i.imgur.com/To6v0oa.png)
+<iframe src="http://widget.mcf.li/mc-mods/minecraft/250473-discordce?version=1.10.2" width="100%" style="border:none">
+</iframe>
+
 ![commands](https://i.imgur.com/mYz3q6Q.png)
 ```
 // <message> - Allows you to chat to the a chosen Discord channel if you have permissions to send messages to it.
