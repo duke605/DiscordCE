@@ -35,6 +35,6 @@ public class CommandFocus extends CommandBase
         // toggling focus
         Preferences.i.focus = !Preferences.i.focus;
         Preferences.save();
-        MCHelper.sendMessage("Focus is now " + (Preferences.i.focus ? "§aON." : "§cOFF."));
+        MCHelper.sendMessage("Focus is now " + (Preferences.i.focus ? "\u00a7aON." : "\u00a7cOFF."));
     }
 }

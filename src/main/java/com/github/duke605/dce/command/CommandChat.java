@@ -39,13 +39,13 @@ public class CommandChat extends CommandBase
 
         // No channel
         if (channelId == null) {
-            MCHelper.sendMessage("§cYou must specify a channel to send messages to in the configuration GUI.");
+            MCHelper.sendMessage("\u00a7cYou must specify a channel to send messages to in the configuration GUI.");
             return;
         }
 
         // Checking if channel still exists
         if (DiscordCE.client.getTextChannelById(channelId) == null) {
-            MCHelper.sendMessage("§cThe channel you specified to send messages to no longer exists.");
+            MCHelper.sendMessage("\u00a7cThe channel you specified to send messages to no longer exists.");
             return;
         }
 
@@ -55,11 +55,11 @@ public class CommandChat extends CommandBase
         }
         catch (PermissionException e)
         {
-            MCHelper.sendMessage("§cYou do not have permission to send messages to this channel.");
+            MCHelper.sendMessage("\u00a7cYou do not have permission to send messages to this channel.");
         }
         catch (VerificationLevelException e)
         {
-            MCHelper.sendMessage("§c" + e.getMessage());
+            MCHelper.sendMessage("\u00a7c" + e.getMessage());
         }
     }
 }

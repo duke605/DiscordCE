@@ -142,7 +142,7 @@ public class GuiUserList extends GuiEmbeddedList
             if (user.getId().equals("136856172203474944"))
                 name = TextFormatting.YELLOW + name;
             else if (VolatileSettings.isFriend(user.getId()))
-                name = "§" + Config.friendColour + name;
+                name = "\u00a7" + Config.friendColour + name;
 
             // Drawing username
             this.fr.drawString(Arrays.truncate(name, 22)

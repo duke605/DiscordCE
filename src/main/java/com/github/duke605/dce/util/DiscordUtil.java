@@ -36,7 +36,7 @@ public class DiscordUtil
         Pattern underlinePattern = Pattern.compile("(__)(.+?)(__)");
 
         // Finding all channel mentions
-        s = RegexUtil.replaceAll(channelPattern, s, "§%s§r", m -> {
+        s = RegexUtil.replaceAll(channelPattern, s, "\u00a7%s\u00a7r", m -> {
             String channelId = m.group(1);
             TextChannel c = client.getTextChannelById(channelId);
 
@@ -47,7 +47,7 @@ public class DiscordUtil
         });
 
         // Finding all user mentions
-        s = RegexUtil.replaceAll(userPattern, s, "§%s§r", m -> {
+        s = RegexUtil.replaceAll(userPattern, s, "\u00a7%s\u00a7r", m -> {
             String userId = m.group(1);
             User u = client.getUserById(userId);
 
@@ -58,16 +58,16 @@ public class DiscordUtil
         });
 
         // Finding bold
-        s = RegexUtil.replaceAll(boldPattern, s, "§l$2§r", m -> null);
+        s = RegexUtil.replaceAll(boldPattern, s, "\u00a7l$2\u00a7r", m -> null);
 
         // Finding italic
-        s = RegexUtil.replaceAll(italicPattern, s, "§o$2§r", m -> null);
+        s = RegexUtil.replaceAll(italicPattern, s, "\u00a7o$2\u00a7r", m -> null);
 
         // Finding underline
-        s = RegexUtil.replaceAll(underlinePattern, s, "§n$2§r", m -> null);
+        s = RegexUtil.replaceAll(underlinePattern, s, "\u00a7n$2\u00a7r", m -> null);
 
         // Finding italic2
-        s = RegexUtil.replaceAll(italic2Pattern, s, "§o$2§r", m -> null);
+        s = RegexUtil.replaceAll(italic2Pattern, s, "\u00a7o$2\u00a7r", m -> null);
 
         return s;
     }
@@ -107,13 +107,13 @@ public class DiscordUtil
 
         // Checking if channel exists
         if (channel == null) {
-            MCHelper.sendMessage("§cThe with the is of \"§l" + channelId + "§r§c\" does not exist");
+            MCHelper.sendMessage("\u00a7cThe with the is of \"\u00a7l" + channelId + "\u00a7r\u00a7c\" does not exist");
             return;
         }
 
         // Checking if channel switched to is same
         if (channelId.equals(Preferences.i.usingChannel)) {
-            MCHelper.sendMessage("§cYou are already on that channel.");
+            MCHelper.sendMessage("\u00a7cYou are already on that channel.");
             return;
         }
 
@@ -129,7 +129,7 @@ public class DiscordUtil
         Preferences.i.usingGuild = channel.getGuild().getId();
         Preferences.save();
 
-        MCHelper.sendMessage("Switching to §" + Config.mentionColour + "#" +channel.getName());
+        MCHelper.sendMessage("Switching to \u00a7" + Config.mentionColour + "#" +channel.getName());
     }
 
     public static void deleteFriend(String userId)
@@ -139,7 +139,7 @@ public class DiscordUtil
         // Checking if user exists
         if (user == null)
         {
-            MCHelper.sendMessage("§cThe user you specified to unfriend does not exist.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to unfriend does not exist.");
             return;
         }
 
@@ -148,7 +148,7 @@ public class DiscordUtil
                 && !VolatileSettings.hasOutgoingFriendRequest(userId)
                 && !VolatileSettings.hasIncomingFriendRequest(userId))
         {
-            MCHelper.sendMessage("§cThe user you specified to unfriend is not a friend and does not have a pending " +
+            MCHelper.sendMessage("\u00a7cThe user you specified to unfriend is not a friend and does not have a pending " +
                     "friend request.");
             return;
         }
@@ -166,11 +166,11 @@ public class DiscordUtil
                 if (r.getStatus() <= 199 || r.getStatus() >= 300)
                 {
                     if (r.getStatus() == 429)
-                        MCHelper.sendMessage("§cRate limit was reached when attempting to unfriend §9@" + user.getUsername() +
-                                ". §cPlease try again in a moment.");
+                        MCHelper.sendMessage("\u00a7cRate limit was reached when attempting to unfriend \u00a79@" + user.getUsername() +
+                                ". \u00a7cPlease try again in a moment.");
                     else
-                        MCHelper.sendMessage("§cAn error occurred when attempting to unfriend §9@" + user.getUsername() +
-                                ". §cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
+                        MCHelper.sendMessage("\u00a7cAn error occurred when attempting to unfriend \u00a79@" + user.getUsername() +
+                                ". \u00a7cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
                 }
             }
             catch (Exception e)
@@ -188,21 +188,21 @@ public class DiscordUtil
         // Checking if user exists
         if (user == null)
         {
-            MCHelper.sendMessage("§cThe user you specified to befriend does not exist.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to befriend does not exist.");
             return;
         }
 
         // Checking if the user is already blocked
         if (VolatileSettings.isFriend(userId))
         {
-            MCHelper.sendMessage("§cThe user you specified to befriend is already a friend.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to befriend is already a friend.");
             return;
         }
 
         // Checking if there is already an outgoing friend request
         if (VolatileSettings.hasOutgoingFriendRequest(userId))
         {
-            MCHelper.sendMessage("§cYou have already sent a friend request to that user.");
+            MCHelper.sendMessage("\u00a7cYou have already sent a friend request to that user.");
             return;
         }
 
@@ -221,11 +221,11 @@ public class DiscordUtil
                 if (r.getStatus() <= 199 || r.getStatus() >= 300)
                 {
                     if (r.getStatus() == 429)
-                        MCHelper.sendMessage("§cRate limit was reached when attempting to befriend §9@" + user.getUsername() +
-                                ". §cPlease try again in a moment.");
+                        MCHelper.sendMessage("\u00a7cRate limit was reached when attempting to befriend \u00a79@" + user.getUsername() +
+                                ". \u00a7cPlease try again in a moment.");
                     else
-                        MCHelper.sendMessage("§cAn error occurred when attempting to befriend §9@" + user.getUsername() +
-                                ". §cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
+                        MCHelper.sendMessage("\u00a7cAn error occurred when attempting to befriend \u00a79@" + user.getUsername() +
+                                ". \u00a7cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
                 }
             }
             catch (Exception e)
@@ -242,14 +242,14 @@ public class DiscordUtil
         // Checking if user exists
         if (user == null)
         {
-            MCHelper.sendMessage("§cThe user you specified to block does not exist.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to block does not exist.");
             return;
         }
 
         // Checking if the user is already blocked
         if (VolatileSettings.isBlocked(userId))
         {
-            MCHelper.sendMessage("§cThe user you specified to block is already blocked.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to block is already blocked.");
             return;
         }
 
@@ -268,11 +268,11 @@ public class DiscordUtil
                 if (r.getStatus() <= 199 || r.getStatus() >= 300)
                 {
                     if (r.getStatus() == 429)
-                        MCHelper.sendMessage("§cRate limit was reached when attempting to block §9@" + user.getUsername() +
-                                ". §cPlease try again in a moment.");
+                        MCHelper.sendMessage("\u00a7cRate limit was reached when attempting to block \u00a79@" + user.getUsername() +
+                                ". \u00a7cPlease try again in a moment.");
                     else
-                        MCHelper.sendMessage("§cAn error occurred when attempting to block §9@" + user.getUsername() +
-                                ". §cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
+                        MCHelper.sendMessage("\u00a7cAn error occurred when attempting to block \u00a79@" + user.getUsername() +
+                                ". \u00a7cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
                 }
             }
             catch (Exception e)
@@ -289,14 +289,14 @@ public class DiscordUtil
         // Checking if user exists
         if (user == null)
         {
-            MCHelper.sendMessage("§cThe user you specified to unblock does not exist.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to unblock does not exist.");
             return;
         }
 
         // Checking if the user is already blocked
         if (!VolatileSettings.isBlocked(userId))
         {
-            MCHelper.sendMessage("§cThe user you specified to block is not blocked.");
+            MCHelper.sendMessage("\u00a7cThe user you specified to block is not blocked.");
             return;
         }
 
@@ -313,11 +313,11 @@ public class DiscordUtil
                 if (r.getStatus() <= 199 || r.getStatus() >= 300)
                 {
                     if (r.getStatus() == 429)
-                        MCHelper.sendMessage("§cRate limit was reached when attempting to unblock §9@" + user.getUsername() +
-                                ". §cPlease try again in a moment.");
+                        MCHelper.sendMessage("\u00a7cRate limit was reached when attempting to unblock \u00a79@" + user.getUsername() +
+                                ". \u00a7cPlease try again in a moment.");
                     else
-                        MCHelper.sendMessage("§cAn error occurred when attempting to unblock §9@" + user.getUsername() +
-                                ". §cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
+                        MCHelper.sendMessage("\u00a7cAn error occurred when attempting to unblock \u00a79@" + user.getUsername() +
+                                ". \u00a7cStatus code: " + r.getStatus() + " (" + r.getStatusText() + ")");
                 }
             }
             catch (Exception e)

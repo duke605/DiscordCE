@@ -53,7 +53,7 @@ public class MCHelper {
     public static JSONObject mentionAsRaw(String userId, String name)
     {
         return new JSONObject()
-                .put("text", "§" + Config.mentionColour + "@" + name + "§r")
+                .put("text", "\u00a7" + Config.mentionColour + "@" + name + "\u00a7r")
                 .put("insertion", userId)
                 .put("hoverEvent", new JSONObject()
                         .put("action", "show_text")
@@ -70,7 +70,7 @@ public class MCHelper {
     public static JSONObject serverAsRaw(String serverId, String name)
     {
         return new JSONObject()
-                .put("text", "§" + Config.serverColour + "$" + name + "§r")
+                .put("text", "\u00a7" + Config.serverColour + "$" + name + "\u00a7r")
                 .put("insertion", serverId)
                 .put("hoverEvent", new JSONObject()
                         .put("action", "show_text")
@@ -87,7 +87,7 @@ public class MCHelper {
     public static JSONObject channelAsRaw(String channelId, String name)
     {
         return new JSONObject()
-                .put("text", "§" + Config.channelColour + name + "§r")
+                .put("text", "\u00a7" + Config.channelColour + name + "\u00a7r")
                 .put("insertion", channelId)
                 .put("clickEvent", new JSONObject()
                     .put("action", "run_command")
@@ -107,9 +107,9 @@ public class MCHelper {
     public static String colourUser(String userId, String username)
     {
         if (VolatileSettings.isFriend(userId))
-            return "§" + Config.friendColour + username + "§r";
+            return "\u00a7" + Config.friendColour + username + "\u00a7r";
 
-        return "§" + Config.userColour + username + "§r";
+        return "\u00a7" + Config.userColour + username + "\u00a7r";
     }
 
     /**
@@ -120,7 +120,7 @@ public class MCHelper {
      */
     public static String colourServer(String name)
     {
-        return "§" + Config.serverColour + name + "§r";
+        return "\u00a7" + Config.serverColour + name + "\u00a7r";
     }
 
     /**
@@ -131,7 +131,7 @@ public class MCHelper {
      */
     public static String colourChannel(String name)
     {
-        return "§" + Config.channelColour + name + "§r";
+        return "\u00a7" + Config.channelColour + name + "\u00a7r";
     }
 
     /**

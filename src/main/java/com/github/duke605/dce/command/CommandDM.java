@@ -40,7 +40,7 @@ public class CommandDM extends CommandBase
         // checking to see if user exists
         if (user == null)
         {
-            MCHelper.sendMessage("§cThe user specified to send messages to does not exist.");
+            MCHelper.sendMessage("\u00a7cThe user specified to send messages to does not exist.");
             return;
         }
 
@@ -49,11 +49,11 @@ public class CommandDM extends CommandBase
         }
         catch (PermissionException e)
         {
-            MCHelper.sendMessage("§cYou do not have permission to send messages to this channel.");
+            MCHelper.sendMessage("\u00a7cYou do not have permission to send messages to this channel.");
         }
         catch (VerificationLevelException e)
         {
-            MCHelper.sendMessage("§c" + e.getMessage());
+            MCHelper.sendMessage("\u00a7c" + e.getMessage());
         }
     }
 }
