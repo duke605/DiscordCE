@@ -41,7 +41,8 @@ import java.util.function.Consumer;
 
 public class MinecraftEventHandler
 {
-
+    public static int singlePlayerGames = 0;
+    public static int multiplayerGames = 0;
     private long lastTyping = 0;
     public static Queue<Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>>> queue = new ArrayDeque<>();
 
@@ -49,11 +50,17 @@ public class MinecraftEventHandler
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
     {
         if (e.isLocal)
+        {
+            singlePlayerGames++;
             ConcurrentUtil.executor.execute(() ->
                     DiscordCE.client.getAccountManager().setGame("Minecraft [SP]"));
+        }
         else
+        {
+            multiplayerGames++;
             ConcurrentUtil.executor.execute(() ->
-                DiscordCE.client.getAccountManager().setGame("Minecraft [MP]"));
+                    DiscordCE.client.getAccountManager().setGame("Minecraft [MP]"));
+        }
     }
 
     @SubscribeEvent

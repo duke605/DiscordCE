@@ -179,21 +179,7 @@ public class DiscordCE
 
         MinecraftForge.EVENT_BUS.register(new MinecraftEventHandler());
 
-        // Tracking sign on
-        if (Config.trackSignOn)
-            ConcurrentUtil.executor.execute(() -> {
-                TimeZone tz = Calendar.getInstance().getTimeZone();
-                Date now = Calendar.getInstance().getTime();
-                String time = new SimpleDateFormat("EEEE, MMMM d, YYYY h:mma").format(now);
-
-                JSONObject props = new JSONObject()
-                        .put("forge_version", ForgeVersion.getVersion())
-                        .put("mc_version", MinecraftForge.MC_VERSION)
-                        .put("timezone", tz.getDisplayName(Locale.CANADA))
-                        .put("local_timestamp", new Date().getTime())
-                        .put("local_time", time);
-
-                MixpanelUtil.sendEvent("Start Game", props);
-            });
+        // Tracking game start
+        MixpanelUtil.setStartGameEvent(true);
     }
 }
