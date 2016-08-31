@@ -23,7 +23,7 @@ public class Relationship
         user = DiscordCE.client.getUserById(obj.getJSONObject("user").getString("id"));
 
         // Checking if the user was found
-        if (user != null)
+        if (user == null)
             new EntityNotFoundException("User with id <" + obj.getJSONObject("user").get("id") + ">" +
                     " could not be found... This should not happen. All info:\n" +
                     obj).printStackTrace();
