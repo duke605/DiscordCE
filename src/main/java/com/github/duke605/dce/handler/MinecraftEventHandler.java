@@ -234,17 +234,4 @@ public class MinecraftEventHandler
             e1.printStackTrace();
         }
     }
-
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void onCrash(CrashReport r)
-    {
-
-    }
-
-    @Override
-    protected void finalize() throws Throwable
-    {
-        super.finalize();
-    }
 }
