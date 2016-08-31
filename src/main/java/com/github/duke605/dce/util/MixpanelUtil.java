@@ -36,7 +36,7 @@ public class MixpanelUtil
     public static void setStartGameEvent(boolean runAsync)
     {
         // Stopping if user does not want to send this kind of event
-        if (Config.trackGameStart)
+        if (!Config.trackGameStart)
             return;
 
         Runnable r = () ->
@@ -71,7 +71,7 @@ public class MixpanelUtil
     public static void sentGameStopEvent(boolean runAsync)
     {
         // Stopping if user does not want to send this kind of event
-        if (Config.trackGameStop)
+        if (!Config.trackGameStop)
             return;
 
         Runnable r = () -> {
