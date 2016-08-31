@@ -9,6 +9,8 @@ import com.mixpanel.mixpanelapi.MessageBuilder;
 import com.mixpanel.mixpanelapi.MixpanelAPI;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -48,7 +50,7 @@ public class MixpanelUtil
             JSONObject props = new JSONObject()
                     .put("forge_version", ForgeVersion.getVersion())
                     .put("mc_version", MinecraftForge.MC_VERSION)
-                    .put("timezone", tz.getDisplayName(Locale.CANADA))
+                    .put("language", FMLCommonHandler.instance().getCurrentLanguage())
                     .put("dce_version", Reference.VERSION);
 
             MixpanelUtil.sendEvent("Start Game", props);

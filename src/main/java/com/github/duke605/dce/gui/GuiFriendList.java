@@ -42,26 +42,30 @@ public class GuiFriendList extends GuiEmbeddedList
 
         if (guiFriends.type == Relationship.FRIEND)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
-                    .filter(r -> r.getValue().type == Relationship.FRIEND)
+                    .filter(r -> r.getValue().type == Relationship.FRIEND
+                        && r.getValue().user != null)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
 
         if (guiFriends.type == Relationship.BLOCK)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
-                    .filter(r -> r.getValue().type == Relationship.BLOCK)
+                    .filter(r -> r.getValue().type == Relationship.BLOCK
+                            && r.getValue().user != null)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
 
         if (guiFriends.type == Relationship.OUTGOING)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
-                    .filter(r -> r.getValue().type == Relationship.OUTGOING)
+                    .filter(r -> r.getValue().type == Relationship.OUTGOING
+                            && r.getValue().user != null)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
 
         if (guiFriends.type == Relationship.INCOMING || guiFriends.type == Relationship.OUTGOING)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
-                    .filter(r -> r.getValue().type == Relationship.INCOMING
-                            || r.getValue().type == Relationship.OUTGOING)
+                    .filter(r -> (r.getValue().type == Relationship.INCOMING
+                                || r.getValue().type == Relationship.OUTGOING)
+                            && r.getValue().user != null)
                     .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
                     .collect(Collectors.toList()));
 
