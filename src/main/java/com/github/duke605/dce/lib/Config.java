@@ -169,17 +169,17 @@ public class Config {
                 , "Tracks when you start up a game of Minecarft. All data is submitted using your SHA1 hashed email so\n" +
                         "for all intents and purposes you remain anonymous and your email remains safe. Below is a list\n" +
                         "of the exact information submitted:\n\t" +
-                        "forge_version - The current version of forge you are using.\n\t\r" +
-                        "Lets me know what version of forge I should focus my attention on.\n\t" +
-                        "mc_version - The current version of Minecraft you are using.\n\t" +
-                        "Lets me know what version of Minecarft i should focus my attention on.\n\t" +
+                        "forge_version - The current version of forge you are using.\n\t\t" +
+                            "Lets me know what version of forge I should focus my attention on.\n\t" +
+                        "mc_version - The current version of Minecraft you are using.\n\t\t" +
+                            "Lets me know what version of Minecarft i should focus my attention on.\n\t" +
                         "timezone - What timezone you are in. \n\t\t" +
-                        "Helps me prioritize what languages I should support.\n\t" +
+                            "Helps me prioritize what languages I should support.\n\t" +
                         "dce_version - The current version of DiscordCE you are using.\n\t\t" +
-                        "Lets me know what version of DiscordCE I should focus my attention on.\n\t" +
+                            "Lets me know what version of DiscordCE I should focus my attention on.\n\t" +
                         "distinct_id - Your sha1 hashed email so i can associate data to an identifier.\n\t\t" +
-                        "If you are worried about your email address being stolen here is my email hashed using SHA1\n\t\t" +
-                        "df5af952a965123bdc6ab38d476ae2aea815146f. As you can see it has no personal information in it.");
+                            "If you are worried about your email address being stolen here is my email hashed using SHA1\n\t\t" +
+                            "df5af952a965123bdc6ab38d476ae2aea815146f. As you can see it has no personal information in it.");
 
         trackGameStop = instance.getBoolean("trackGameStop"
                 , CATEGORY_PRIVACY
@@ -188,17 +188,17 @@ public class Config {
                         "for all intents and purposes you remain anonymous and your email remains safe. Below is a list\n" +
                         "of the exact information submitted:\n\t" +
                         "time_played - The total time in milliseconds that Minecarft has been open.\n\t\t" +
-                        "To be honest I'm really just curious.\n\t" +
+                            "To be honest I'm really just curious.\n\t" +
                         "num_guilds - The number of guilds you are connected to.\n\t\t" +
-                        "Lets me know if scaling should be a priority.\n\t" +
+                            "Lets me know if scaling should be a priority.\n\t" +
                         "num_players - The total number of players in spanning across all guilds you are connected to\n\t\t" +
-                        "Lets me know if scaling should be a priority.\n\t" +
+                            "Lets me know if scaling should be a priority.\n\t" +
                         "single_player_games - The number of times you entered a single player world.\n\t\t" +
-                        "Lets me know how people play using this mod so I can streamline.\n\t" +
+                            "Lets me know how people play using this mod so I can streamline.\n\t" +
                         "multiplayer_games - The number of times you entered a multiplayer world.\n\t\t" +
-                        "Lets me know how people play using this mod so I can streamline.\n\t" +
+                            "Lets me know how people play using this mod so I can streamline.\n\t" +
                         "distinct_id - Your sha1 hashed email so i can associate data to an identifier.\n\t\t" +
-                        "If you are worried about your email address being stolen here is my email hashed using SHA1\n\t\t" +
+                            "If you are worried about your email address being stolen here is my email hashed using SHA1\n\t\t" +
                         "df5af952a965123bdc6ab38d476ae2aea815146f. As you can see it has no personal information in it.");
 
         // Separating server overrides

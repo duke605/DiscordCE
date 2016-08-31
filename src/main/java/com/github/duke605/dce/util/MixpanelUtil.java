@@ -19,6 +19,7 @@ import java.util.TimeZone;
 
 public class MixpanelUtil
 {
+    public static final boolean debugging = false;
 
     /**
      * @return A constructed message builder object initialized with token
@@ -99,7 +100,7 @@ public class MixpanelUtil
     public static boolean sendEvent(String eventName, JSONObject props)
     {
         // Checking if email is blank
-        if (Config.email.trim().isEmpty())
+        if (Config.email.trim().isEmpty() || debugging)
             return false;
 
         MessageBuilder b = getMessageBuilder();
