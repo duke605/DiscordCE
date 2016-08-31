@@ -14,7 +14,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mixpanel.mixpanelapi.MixpanelAPI;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.requests.Requester;
@@ -23,12 +22,13 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ICrashCallable;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.json.JSONObject;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
@@ -179,21 +179,7 @@ public class DiscordCE
 
         MinecraftForge.EVENT_BUS.register(new MinecraftEventHandler());
 
-        // Tracking sign on
-        if (Config.trackSignOn)
-            ConcurrentUtil.executor.execute(() -> {
-                TimeZone tz = Calendar.getInstance().getTimeZone();
-                Date now = Calendar.getInstance().getTime();
-                String time = new SimpleDateFormat("EEEE, MMMM d, YYYY h:mma").format(now);
-
-                JSONObject props = new JSONObject()
-                        .put("forge_version", ForgeVersion.getVersion())
-                        .put("mc_version", MinecraftForge.MC_VERSION)
-                        .put("timezone", tz.getDisplayName(Locale.CANADA))
-                        .put("local_timestamp", new Date().getTime())
-                        .put("local_time", time);
-
-                MixpanelUtil.sendEvent("Start Game", props);
-            });
+        // Tracking game start
+        MixpanelUtil.setStartGameEvent(true);
     }
 }

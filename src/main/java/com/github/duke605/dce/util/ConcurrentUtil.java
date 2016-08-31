@@ -36,7 +36,7 @@ public class ConcurrentUtil
                 return;
             }
 
-            DynamicTexture t = new DynamicTexture(image);
+            DynamicTexture t = new DynamicTexture((BufferedImage) image);
             Minecraft mc = Minecraft.getMinecraft();
             VolatileSettings.icons.put(url, mc.getTextureManager().getDynamicTextureLocation(url, t));
         }));

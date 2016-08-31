@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiGameOver;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -38,23 +39,32 @@ import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class MinecraftEventHandler
 {
 
     private long lastTyping = 0;
-    public static Queue<Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>>> queue = new ArrayDeque<>();
+    public static int singlePlayerGames = 0;
+    public static int multiplayerGames = 0;
+    public static Queue<Map.Entry<Future, Consumer>> queue = new ArrayDeque<>();
 
      @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
     {
         if (e.isLocal())
+        {
+            singlePlayerGames++;
             ConcurrentUtil.executor.execute(() ->
                     DiscordCE.client.getAccountManager().setGame("Minecraft [SP]"));
+        }
         else
+        {
+            multiplayerGames++;
             ConcurrentUtil.executor.execute(() ->
-                DiscordCE.client.getAccountManager().setGame("Minecraft [MP]"));
+                    DiscordCE.client.getAccountManager().setGame("Minecraft [MP]"));
+        }
     }
 
     @SubscribeEvent
@@ -207,8 +217,8 @@ public class MinecraftEventHandler
                 || queue.size() <= 0)
             return;
 
-        Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>> entry = queue.poll();
-        Future<BufferedImage> future = entry.getKey();
+        Map.Entry<Future, Consumer> entry = queue.poll();
+        Future future = entry.getKey();
 
         // Checking if task is done
         if (!future.isDone())
@@ -217,12 +227,24 @@ public class MinecraftEventHandler
         try
         {
             // Processing
-            BufferedImage image = future.get();
-            entry.getValue().accept(image);
+            entry.getValue().accept(future.get());
         }
         catch (Exception e1)
         {
             e1.printStackTrace();
         }
+    }
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void onCrash(CrashReport r)
+    {
+
+    }
+
+    @Override
+    protected void finalize() throws Throwable
+    {
+        super.finalize();
     }
 }
