@@ -201,24 +201,6 @@ public class Config {
                                 "If you are worried about your email address being stolen here is my email hashed using SHA1\n\t\t" +
                                 "df5af952a965123bdc6ab38d476ae2aea815146f. As you can see it has no personal information in it.");
 
-
-        trackGameStop = instance.getBoolean("trackGameCrashes"
-                , CATEGORY_PRIVACY
-                , true
-                , "Tracks when the game crashes. All data is sumbitted using your SHA1 hashed email so\n" +
-                        "for all intents and purposes you remain anonymous and your email remains safe. Below is a list\n" +
-                        "of the exact information submitted:\n\t" +
-                            "os - The operating system.\n\t\t" +
-                                "Helps me troubleshoot if the crash was OS related.\n\t" +
-                            "single_player_games - The number of times you entered a single player world.\n\t\t" +
-                            "Lets me know how people play using this mod so I can streamline.\n\t" +
-                            "multiplayer_games - The number of times you entered a multiplayer world.\n\t\t" +
-                            "Lets me know how people play using this mod so I can streamline.\n\t" +
-                            "distinct_id - Your sha1 hashed email so i can associate data to an identifier.\n\t\t" +
-                            "If you are worried about your email address being stolen here is my email hashed using SHA1\n\t\t" +
-                            "df5af952a965123bdc6ab38d476ae2aea815146f. As you can see it has no personal information in it.");
-
-
         // Separating server overrides
         for(String o : sno) {
             String[] a = o.split("::");
