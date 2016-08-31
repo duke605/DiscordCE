@@ -1,6 +1,7 @@
 package com.github.duke605.dce.entity;
 
 import com.github.duke605.dce.DiscordCE;
+import com.github.duke605.dce.exception.EntityNotFoundException;
 import net.dv8tion.jda.entities.User;
 import org.json.JSONObject;
 
@@ -20,5 +21,11 @@ public class Relationship
         id = obj.getString("id");
 
         user = DiscordCE.client.getUserById(obj.getJSONObject("user").getString("id"));
+
+        // Checking if the user was found
+        if (user != null)
+            new EntityNotFoundException("User with id <" + obj.getJSONObject("user").get("id") + ">" +
+                    " could not be found... This should not happen. All info:\n" +
+                    obj).printStackTrace();
     }
 }
