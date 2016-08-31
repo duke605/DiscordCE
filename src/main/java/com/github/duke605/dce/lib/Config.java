@@ -169,9 +169,9 @@ public class Config {
                 , "Tracks when you start up a game of Minecarft. All data is submitted using your SHA1 hashed email so\n" +
                         "for all intents and purposes you remain anonymous and your email remains safe. Below is a list\n" +
                         "of the exact information submitted:\n\t" +
-                            "forge_version - The current version of forge you are using.\n\t\r" +
+                            "forge_version - The current version of forge you are using.\n\t\t" +
                                 "Lets me know what version of forge I should focus my attention on.\n\t" +
-                            "mc_version - The current version of Minecraft you are using.\n\t" +
+                            "mc_version - The current version of Minecraft you are using.\n\t\t" +
                                 "Lets me know what version of Minecarft i should focus my attention on.\n\t" +
                             "timezone - What timezone you are in. \n\t\t" +
                                 "Helps me prioritize what languages I should support.\n\t" +
