@@ -24,6 +24,7 @@ public class GuiFriends extends GuiListContainer
 
     public GuiFriends(GuiScreen parent)
     {
+        indicator = new ResourceLocation("dce:textures/gui/status_dot.png");
         this.parent = parent;
         listener = new CustomListenerAdapter()
         {
@@ -84,20 +85,20 @@ public class GuiFriends extends GuiListContainer
     {
         this.drawDefaultBackground();
         getEmbeddedList().drawScreen(x, y, f);
-        drawCenteredString(mc.fontRendererObj, "Relationships", width / 2, 9, 0xFFFFFFFF);
+        drawCenteredString(mc.fontRenderer, "Relationships", width / 2, 9, 0xFFFFFFFF);
 
         super.drawScreen(x, y, f);
     }
 
     @Override
-    protected void keyTyped(char p_keyTyped_1_, int p_keyTyped_2_) throws IOException
+    protected void keyTyped(char p_keyTyped_1_, int p_keyTyped_2_)
     {
         if(p_keyTyped_2_ == 1)
             this.mc.displayGuiScreen(parent);
     }
 
     @Override
-    protected void actionPerformed(GuiButton b) throws IOException
+    protected void actionPerformed(GuiButton b)
     {
         // Back
         if (b.id == -1)
@@ -107,7 +108,7 @@ public class GuiFriends extends GuiListContainer
         }
 
         b.enabled = false;
-        buttonList.stream().filter(button -> button.id > 0 && button != b).forEach(button -> button.enabled = true);
+        buttonList.stream().filter(button -> ((GuiButton)button).id > 0 && button != b).forEach(button -> ((GuiButton)button).enabled = true);
         type = b.id;
         friendList.initList();
     }

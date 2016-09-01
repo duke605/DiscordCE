@@ -8,9 +8,6 @@ import net.minecraft.client.renderer.Tessellator;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Cole on 8/25/2016.
- */
 public abstract class GuiEntry implements GuiListExtended.IGuiListEntry
 {
     protected List<GuiListButton> guiButtons = new ArrayList<>();

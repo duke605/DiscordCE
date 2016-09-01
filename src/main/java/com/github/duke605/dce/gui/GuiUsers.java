@@ -60,7 +60,7 @@ public class GuiUsers extends GuiListContainer
     @Override
     public void initGui()
     {
-        search = new GuiTextField(0, mc.fontRendererObj, width/2-100, height - 22, 200, 19);
+        search = new GuiTextField(mc.fontRenderer, width/2-100, height - 22, 200, 19);
         userList = new GuiUserList(mc, this);
         buttonList.add(new GuiButton(0
                 , 10
@@ -95,7 +95,7 @@ public class GuiUsers extends GuiListContainer
     }
 
     @Override
-    protected void actionPerformed(GuiButton b) throws IOException
+    protected void actionPerformed(GuiButton b)
     {
         // Previous page
         if (b.id == -1)
@@ -213,7 +213,7 @@ public class GuiUsers extends GuiListContainer
     }
 
     @Override
-    protected void mouseClicked(int x, int y, int u) throws IOException
+    protected void mouseClicked(int x, int y, int u)
     {
         super.mouseClicked(x, y, u);
         search.mouseClicked(x, y, u);
@@ -225,7 +225,7 @@ public class GuiUsers extends GuiListContainer
         this.drawDefaultBackground();
         userList.drawScreen(x, y, f);
         search.drawTextBox();
-        drawCenteredString(mc.fontRendererObj, "Users", width / 2, 9, 0xFFFFFFFF);
+        drawCenteredString(mc.fontRenderer, "Users", width / 2, 9, 0xFFFFFFFF);
         super.drawScreen(x, y, f);
     }
 
@@ -236,7 +236,7 @@ public class GuiUsers extends GuiListContainer
     }
 
     @Override
-    protected void keyTyped(char c, int code) throws IOException
+    protected void keyTyped(char c, int code)
     {
         if(code == 1)
             mc.displayGuiScreen(parent);

@@ -15,10 +15,12 @@ import com.google.gson.stream.JsonReader;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.requests.Requester;
@@ -52,7 +54,7 @@ public class DiscordCE
     public static volatile JDAClient client;
 
     // Keybindings
-    public static KeyBinding test;
+    public static KeyBinding menuKey;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent e)
@@ -165,9 +167,11 @@ public class DiscordCE
         ClientCommandHandler.instance.registerCommand(new CommandFocus());
         ClientCommandHandler.instance.registerCommand(new CommandDM());
 
-        ClientRegistry.registerKeyBinding(test = new KeyBinding("Open DiscordCE menu", Keyboard.KEY_Y, "DiscordCE"));
+        ClientRegistry.registerKeyBinding(menuKey = new KeyBinding("Open DiscordCE menu", Keyboard.KEY_Y, "DiscordCE"));
 
-        MinecraftForge.EVENT_BUS.register(new MinecraftEventHandler());
+        Object o = new MinecraftEventHandler();
+        FMLCommonHandler.instance().bus().register(o);
+        MinecraftForge.EVENT_BUS.register(o);
 
         // Tracking game start
         MixpanelUtil.setStartGameEvent(true);

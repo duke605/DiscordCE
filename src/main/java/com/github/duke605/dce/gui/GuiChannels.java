@@ -112,13 +112,13 @@ public class GuiChannels extends GuiListContainer
     {
         this.drawDefaultBackground();
         channelList.drawScreen(x, y, f);
-        drawCenteredString(mc.fontRendererObj, "Channels for " + guild.getName(), width / 2, 8, 0xFFFFFFFF);
+        drawCenteredString(mc.fontRenderer, "Channels for " + guild.getName(), width / 2, 8, 0xFFFFFFFF);
 
         super.drawScreen(x, y, f);
     }
 
     @Override
-    protected void actionPerformed(GuiButton b) throws IOException
+    protected void actionPerformed(GuiButton b)
     {
         // Going back to servers
         if (b.id == 0)
@@ -158,7 +158,7 @@ public class GuiChannels extends GuiListContainer
     }
 
     @Override
-    protected void keyTyped(char p_keyTyped_1_, int p_keyTyped_2_) throws IOException
+    protected void keyTyped(char p_keyTyped_1_, int p_keyTyped_2_)
     {
         if(p_keyTyped_2_ == 1)
             this.mc.displayGuiScreen(guiServers);

@@ -37,8 +37,7 @@ public class GuiInput extends GuiScreen
                 , 20
                 , "Done"));
 
-        textField = new GuiTextField(0
-                , fontRendererObj
+        textField = new GuiTextField(mc.fontRenderer
                 , (width / 2) - 150
                 , (height / 2) - 10
                 , 300
@@ -60,24 +59,24 @@ public class GuiInput extends GuiScreen
     }
 
     @Override
-    protected void keyTyped(char c, int code) throws IOException
+    protected void keyTyped(char c, int code)
     {
         if (code == Keyboard.KEY_ESCAPE)
             super.keyTyped(c, code);
         else if (code == Keyboard.KEY_RETURN)
-            actionPerformed(buttonList.get(0));
+            actionPerformed((GuiButton) buttonList.get(0));
         else
             textField.textboxKeyTyped(c, code);
     }
 
     @Override
-    protected void actionPerformed(GuiButton b) throws IOException
+    protected void actionPerformed(GuiButton b)
     {
         callback.accept(textField.getText());
     }
 
     @Override
-    protected void mouseClicked(int p_mouseClicked_1_, int p_mouseClicked_2_, int p_mouseClicked_3_) throws IOException
+    protected void mouseClicked(int p_mouseClicked_1_, int p_mouseClicked_2_, int p_mouseClicked_3_)
     {
         super.mouseClicked(p_mouseClicked_1_,p_mouseClicked_2_,p_mouseClicked_3_);
         textField.mouseClicked(p_mouseClicked_1_, p_mouseClicked_2_, p_mouseClicked_3_);

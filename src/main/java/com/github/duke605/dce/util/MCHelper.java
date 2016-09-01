@@ -38,7 +38,7 @@ public class MCHelper {
                 || Minecraft.getMinecraft().thePlayer == null)
             return;
 
-        IChatComponent component = IChatComponent.Serializer.jsonToComponent(message.toString());
+        IChatComponent component = IChatComponent.Serializer.func_150699_a(message.toString());
         Minecraft.getMinecraft().thePlayer.addChatMessage(component);
     }
 

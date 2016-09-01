@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -29,15 +30,15 @@ public class GuiServerList extends GuiEmbeddedList
         super(mc
                 , guiServers.width + 100
                 , guiServers.height
-                , 16 + mc.fontRendererObj.FONT_HEIGHT
+                , 16 + mc.fontRenderer.FONT_HEIGHT
                 , guiServers.height - 50
-                , mc.fontRendererObj.FONT_HEIGHT + 16);
+                , mc.fontRenderer.FONT_HEIGHT + 16);
 
         this.guiServers = guiServers;
         entries = new ArrayList<>(DiscordCE.client.getGuilds().size());
         DiscordCE.client.getGuilds().stream()
                 .sorted((g, g1) -> g.getName().compareTo(g1.getName()))
-                .forEach(g -> entries.add(new GuildEntry(mc.fontRendererObj, g)));
+                .forEach(g -> entries.add(new GuildEntry(mc.fontRenderer, g)));
     }
 
     @Override
@@ -78,10 +79,10 @@ public class GuiServerList extends GuiEmbeddedList
         }
 
         @Override
-        public void drawEntry(int index, int x, int y, int width, int height, int mouseX, int mouseY, boolean isSelected)
+        public void drawEntry(int index, int x, int y, int width, int height, Tessellator t, int mouseX, int mouseY, boolean isSelected)
         {
             for(GuiListButton button : guiButtons)
-                button.drawButton(mc, mouseX, mouseY, x, y);
+                button.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, x, y);
 
             // Server name
             this.fr.drawString(Arrays.truncate(guild.getName(), 20)
@@ -91,7 +92,7 @@ public class GuiServerList extends GuiEmbeddedList
 
             // Members
             this.fr.drawString("" + guild.getUsers().size()
-                    , x + width - 150 - mc.fontRendererObj.getStringWidth("" + guild.getUsers().size())
+                    , x + width - 150 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + guild.getUsers().size())
                     , y + (height - this.fr.FONT_HEIGHT + 1) / 2
                     , 0xFFFFFF);
 
@@ -135,18 +136,18 @@ public class GuiServerList extends GuiEmbeddedList
                     if (result)
                         guild.getManager().leave();
 
-                    mc.displayGuiScreen(guiServers);
+                    Minecraft.getMinecraft().displayGuiScreen(guiServers);
                 }
                 , "Are you sure you want to leave " + guild.getName() + "?"
                 , "You'll have to get an invite link to join again."
                 , 0);
-                mc.displayGuiScreen(yn);
+                Minecraft.getMinecraft().displayGuiScreen(yn);
             }
 
             // Showing channels for guild
             if (b.id == 2)
             {
-                mc.displayGuiScreen(new GuiChannels(guiServers, guild));
+                Minecraft.getMinecraft().displayGuiScreen(new GuiChannels(guiServers, guild));
             }
         }
     }

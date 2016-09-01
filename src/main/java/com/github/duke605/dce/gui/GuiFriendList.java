@@ -10,6 +10,7 @@ import com.github.duke605.dce.util.*;
 import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.image.BufferedImage;
@@ -23,16 +24,18 @@ public class GuiFriendList extends GuiEmbeddedList
 {
     private GuiFriends guiFriends;
     private List<RelationshipEntry> entries = new ArrayList<>();
+    private Minecraft mc;
 
     public GuiFriendList(Minecraft mc, GuiFriends guiFriends)
     {
         super(mc
                 , guiFriends.width + 100
                 , guiFriends.height
-                , 16 + mc.fontRendererObj.FONT_HEIGHT
-                , guiFriends.height - (16 + mc.fontRendererObj.FONT_HEIGHT)
+                , 16 + mc.fontRenderer.FONT_HEIGHT
+                , guiFriends.height - (16 + mc.fontRenderer.FONT_HEIGHT)
                 , 26);
         this.guiFriends = guiFriends;
+        this.mc = mc;
         initList();
     }
 
@@ -44,21 +47,21 @@ public class GuiFriendList extends GuiEmbeddedList
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
                     .filter(r -> r.getValue().type == Relationship.FRIEND
                         && r.getValue().user != null)
-                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
+                    .map(r -> new RelationshipEntry(mc.fontRenderer, r.getValue()))
                     .collect(Collectors.toList()));
 
         if (guiFriends.type == Relationship.BLOCK)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
                     .filter(r -> r.getValue().type == Relationship.BLOCK
                             && r.getValue().user != null)
-                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
+                    .map(r -> new RelationshipEntry(mc.fontRenderer, r.getValue()))
                     .collect(Collectors.toList()));
 
         if (guiFriends.type == Relationship.OUTGOING)
             this.entries.addAll(VolatileSettings.relationships.entrySet().stream()
                     .filter(r -> r.getValue().type == Relationship.OUTGOING
                             && r.getValue().user != null)
-                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
+                    .map(r -> new RelationshipEntry(mc.fontRenderer, r.getValue()))
                     .collect(Collectors.toList()));
 
         if (guiFriends.type == Relationship.INCOMING || guiFriends.type == Relationship.OUTGOING)
@@ -66,7 +69,7 @@ public class GuiFriendList extends GuiEmbeddedList
                     .filter(r -> (r.getValue().type == Relationship.INCOMING
                                 || r.getValue().type == Relationship.OUTGOING)
                             && r.getValue().user != null)
-                    .map(r -> new RelationshipEntry(mc.fontRendererObj, r.getValue()))
+                    .map(r -> new RelationshipEntry(mc.fontRenderer, r.getValue()))
                     .collect(Collectors.toList()));
 
         // Downloading user avatars
@@ -136,7 +139,7 @@ public class GuiFriendList extends GuiEmbeddedList
         }
 
         @Override
-        public void drawEntry(int index,int x,int y,int width,int height,int mouseX,int mouseY,boolean isSelected)
+        public void drawEntry(int index, int x, int y, int width, int height,Tessellator t, int mouseX, int mouseY, boolean isSelected)
         {
             for (GuiListButton button : guiButtons)
                 button.drawButton(mc, mouseX, mouseY, x, y);
@@ -236,7 +239,7 @@ public class GuiFriendList extends GuiEmbeddedList
         }
 
         @Override
-        public void drawEntry(int index,int x,int y,int width,int height,int mouseX,int mouseY,boolean isSelected)
+        public void drawEntry(int index,int x,int y,int width,int height,Tessellator t,int mouseX,int mouseY,boolean isSelected)
         {
             // Username
             this.fr.drawString(categoryName

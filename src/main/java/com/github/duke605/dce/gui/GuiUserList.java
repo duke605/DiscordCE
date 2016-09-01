@@ -10,6 +10,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,9 +33,9 @@ public class GuiUserList extends GuiEmbeddedList
         super(mc
                 , guiUsers.width
                 , guiUsers.height
-                , 16 + mc.fontRendererObj.FONT_HEIGHT
+                , 16 + mc.fontRenderer.FONT_HEIGHT
                 , guiUsers.height - 50
-                , mc.fontRendererObj.FONT_HEIGHT + 16);
+                , mc.fontRenderer.FONT_HEIGHT + 16);
         this.guiUsers = guiUsers;
         initList();
     }
@@ -120,11 +121,11 @@ public class GuiUserList extends GuiEmbeddedList
         public UserEntry(User user)
         {
             this.user = user;
-            this.fr = mc.fontRendererObj;
+            this.fr = Minecraft.getMinecraft().fontRenderer;
         }
 
         @Override
-        public void drawEntry(int index,int x,int y,int width,int height,int mouseX,int mouseY,boolean isSelected)
+        public void drawEntry(int index, int x, int y, int width, int height, Tessellator t, int mouseX, int mouseY, boolean isSelected)
         {
             if (index == selectedIdx)
             {

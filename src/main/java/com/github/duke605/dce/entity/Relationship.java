@@ -3,6 +3,8 @@ package com.github.duke605.dce.entity;
 import com.github.duke605.dce.DiscordCE;
 import com.github.duke605.dce.exception.EntityNotFoundException;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.impl.JDAImpl;
+import net.dv8tion.jda.entities.impl.UserImpl;
 import org.json.JSONObject;
 
 public class Relationship
@@ -19,12 +21,20 @@ public class Relationship
     public Relationship(JSONObject obj) {
         type = obj.getInt("type");
         id = obj.getString("id");
+        long time = System.currentTimeMillis();
 
-        user = DiscordCE.client.getUserById(obj.getJSONObject("user").getString("id"));
+        // Looping till user is not null
+        do
+        {
+            user = DiscordCE.client.getUserById(obj.getJSONObject("user").getString("id"));
 
+            // Breaking if user could not be found in 30 seconds
+            if (time > System.currentTimeMillis() - 30000)
+                break;
+        } while (user == null);
 
         // Checking if the user was found
-        if (user != null)
+        if (user == null)
             new EntityNotFoundException("User with id <" + obj.getJSONObject("user").get("id") + ">" +
                     " could not be found... This should not happen. All info:\n" +
                     obj).printStackTrace();

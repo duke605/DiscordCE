@@ -39,6 +39,7 @@ import java.util.TimeZone;
 
 public class DiscordEventHandler extends CustomListenerAdapter {
 
+
     @Override
     public void onReady(ReadyEvent e)
     {
@@ -120,7 +121,7 @@ public class DiscordEventHandler extends CustomListenerAdapter {
         Minecraft
                 .getMinecraft()
                 .thePlayer
-                .addChatComponentMessage(IChatComponent.Serializer.jsonToComponent(message));
+                .addChatComponentMessage(IChatComponent.Serializer.func_150699_a(message));
     }
 
     @Override
@@ -147,7 +148,7 @@ public class DiscordEventHandler extends CustomListenerAdapter {
         Minecraft
                 .getMinecraft()
                 .thePlayer
-                .addChatComponentMessage(IChatComponent.Serializer.jsonToComponent(message));
+                .addChatComponentMessage(IChatComponent.Serializer.func_150699_a(message));
     }
 
     @Override

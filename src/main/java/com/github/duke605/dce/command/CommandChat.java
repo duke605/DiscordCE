@@ -26,12 +26,12 @@ public class CommandChat extends CommandBase
     }
 
     @Override
-    public boolean func_71519_b(ICommandSender sender) {
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
         return true;
     }
 
     @Override
-    public void func_71515_b(ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         String message = Arrays.join(args, " ");
         String channelId = Preferences.i.usingChannel;
         JDAClient c = DiscordCE.client;

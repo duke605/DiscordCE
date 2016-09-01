@@ -9,6 +9,7 @@ import com.github.duke605.dce.util.ConcurrentUtil;
 import com.github.duke605.dce.util.MCHelper;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent;
@@ -18,7 +19,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.hooks.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiGameOver;
@@ -30,8 +30,6 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
 import org.json.JSONObject;
-
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.Map;
@@ -44,7 +42,7 @@ public class MinecraftEventHandler
     public static int singlePlayerGames = 0;
     public static int multiplayerGames = 0;
     private long lastTyping = 0;
-    public static Queue<Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>>> queue = new ArrayDeque<>();
+    public static Queue<Map.Entry<Future, Consumer>> queue = new ArrayDeque<>();
 
     @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
@@ -83,10 +81,10 @@ public class MinecraftEventHandler
             return;
 
         GuiChat gui = (GuiChat) Minecraft.getMinecraft().currentScreen;
-        GuiTextField field = ReflectionHelper.getPrivateValue(GuiChat.class, gui, 7);
+        GuiTextField field = ReflectionHelper.getPrivateValue(GuiChat.class, gui, 9);
 
         // Players is typing in command and not sending message
-        if (field.getText().isEmpty() || !field.getText().startsWith("//"))
+        if (field.getText().isEmpty() || !field.getText().startsWith("//") || field.getText().startsWith("///"))
             return;
 
         field.setMaxStringLength(2000);
@@ -101,7 +99,7 @@ public class MinecraftEventHandler
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
-        if (DiscordCE.test.isPressed())
+        if (DiscordCE.menuKey.isPressed())
             Minecraft.getMinecraft().displayGuiScreen(new GuiDiscordCeMenu());
     }
 
@@ -213,18 +211,19 @@ public class MinecraftEventHandler
                 || queue.size() <= 0)
             return;
 
-        Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>> entry = queue.poll();
-        Future<BufferedImage> future = entry.getKey();
+        Map.Entry<Future, Consumer> entry = queue.poll();
+        Future future = entry.getKey();
 
         // Checking if task is done
         if (!future.isDone())
+        {
             queue.add(entry);
+            return;
+        }
 
         try
         {
-            // Processing
-            BufferedImage image = future.get();
-            entry.getValue().accept(image);
+            entry.getValue().accept(future.get());
         }
         catch (Exception e1)
         {

@@ -63,7 +63,7 @@ public class DrawingUtils {
         GL11.glTranslatef(xCoord, yCoord, 1.0F);
         GL11.glScaled(scale, scale, 1.0F);
 
-        Gui.drawModalRectWithCustomSizedTexture(0, 0, xLoc, yLoc, xSize, ySize, imageWidth, imageHeight);
+        Gui.func_146110_a(0, 0, xLoc, yLoc, xSize, ySize, imageWidth, imageHeight);
         GL11.glColor4d(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
@@ -100,7 +100,7 @@ public class DrawingUtils {
      * @param colour The colour of the text
      */
     public static void drawCenteredUnicodeString(String text, int xCoord, int yCoord, int colour) {
-        FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         boolean prevFlag;
 
         // Remembering unicode flag
@@ -122,7 +122,7 @@ public class DrawingUtils {
      * @param unicodeFlag If the text should be in unicode
      */
     public static void drawScaledString(String text, int xCoord, int yCoord, float scale, int colour, boolean unicodeFlag) {
-        FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         boolean prevFlag;
 
         // Remembering unicode flag
@@ -155,7 +155,7 @@ public class DrawingUtils {
      * @param width The width of the string before it wraps
      */
     public static void drawSplitUnicodeString(String text, int xCoord, int yCoord, int colour, int width) {
-        FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         boolean prevFlag;
 
         // Remembering unicode flag
@@ -175,7 +175,7 @@ public class DrawingUtils {
      * @param colour The colour of the text
      */
     public static void drawUnicodeString(String text, int xCoord, int yCoord, int colour) {
-        FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         boolean prevFlag;
 
         // Remembering unicode flag
@@ -193,7 +193,7 @@ public class DrawingUtils {
      * @return the length of the unicodeString
      */
     public static int getUnicodeStringWidth(String unicodeString) {
-        FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         boolean prevFlag;
         int stringLength;
 

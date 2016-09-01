@@ -15,7 +15,7 @@ public class CommandBlock extends CommandBase
     }
 
     @Override
-    public boolean func_71519_b(ICommandSender ss)
+    public boolean canCommandSenderUseCommand(ICommandSender ss)
     {
         return true;
     }
@@ -27,7 +27,7 @@ public class CommandBlock extends CommandBase
     }
 
     @Override
-    public void func_71515_b(ICommandSender ss, String[] args) throws CommandException
+    public void processCommand(ICommandSender ss, String[] args) throws CommandException
     {
         DiscordUtil.block(args[0]);
     }

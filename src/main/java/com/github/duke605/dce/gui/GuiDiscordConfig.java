@@ -2,10 +2,10 @@ package com.github.duke605.dce.gui;
 
 import com.github.duke605.dce.lib.Config;
 import com.github.duke605.dce.lib.Reference;
+import cpw.mods.fml.client.config.GuiConfig;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.config.GuiConfig;
 
 import java.util.Arrays;
 
