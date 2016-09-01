@@ -13,11 +13,11 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'forge'
 apply plugin: "com.github.johnrengelman.shadow"
 
 /*mine
@@ -26,7 +26,7 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "1.8.9-1.0.4"
+version = "1.7.10-1.0.4"
 group= "com.github.duke605" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "dce"
 
@@ -34,9 +34,9 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.8.9-11.15.1.1902-1.8.9"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
-    mappings = "snapshot_20160826"
+   // mappings = "snapshot_20160826"
 }
 
 srcCompat = JavaVersion.VERSION_1_8

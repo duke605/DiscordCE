@@ -14,6 +14,7 @@ import net.dv8tion.jda.entities.User;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.Tessellator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +29,16 @@ public class GuiChannelList extends GuiEmbeddedList
         super(mc
                 , guiChannels.width + 100
                 , guiChannels.height
-                , 16 + mc.fontRendererObj.FONT_HEIGHT
-                , guiChannels.height - (16 + mc.fontRendererObj.FONT_HEIGHT)
-                , mc.fontRendererObj.FONT_HEIGHT + 16);
+                , 16 + mc.fontRenderer.FONT_HEIGHT
+                , guiChannels.height - (16 + mc.fontRenderer.FONT_HEIGHT)
+                , mc.fontRenderer.FONT_HEIGHT + 16);
         this.guiChannels = guiChannels;
         entries = new ArrayList<>(guiChannels.guild.getTextChannels().size());
         User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
         guiChannels.guild.getTextChannels().stream()
                 .filter(c -> c.checkPermission(me, Permission.MESSAGE_READ)
                              && c.checkPermission(me, Permission.MESSAGE_WRITE))
-                .forEach(g -> entries.add(new ChannelEntry(mc.fontRendererObj, g)));
+                .forEach(g -> entries.add(new ChannelEntry(mc.fontRenderer, g)));
     }
 
     @Override
@@ -82,10 +83,10 @@ public class GuiChannelList extends GuiEmbeddedList
         }
 
         @Override
-        public void drawEntry(int index, int x, int y, int width, int height, int mouseX, int mouseY, boolean isSelected)
+        public void drawEntry(int index, int x, int y, int width, int height, Tessellator var6, int mouseX, int mouseY, boolean isSelected)
         {
             for(GuiListButton button : guiButtons)
-                button.drawButton(mc, mouseX, mouseY, x, y);
+                button.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, x, y);
 
             // Channel name
             this.fr.drawString(Arrays.truncate(channel.getName(), 30)

@@ -1,13 +1,13 @@
 package com.github.duke605.dce.gui;
 
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.IModGuiFactory;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.client.IModGuiFactory;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import org.apache.logging.log4j.Level;
 
 import java.awt.*;
@@ -37,7 +37,7 @@ public class GuiDiscordCeMenu extends GuiScreen
     }
 
     @Override
-    protected void actionPerformed(GuiButton b) throws IOException
+    protected void actionPerformed(GuiButton b)
     {
 
         // Exiting gui
@@ -75,10 +75,22 @@ public class GuiDiscordCeMenu extends GuiScreen
 
         // Report issue
         else if (b.id == 5)
-            Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE/issues"));
+            try
+            {
+                Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE/issues"));
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
 
-        // Go to github
+            // Go to github
         else if (b.id == 6)
-            Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE"));
+            try
+            {
+                Desktop.getDesktop().browse(URI.create("https://github.com/duke605/DiscordCE"));
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            }
     }
 }

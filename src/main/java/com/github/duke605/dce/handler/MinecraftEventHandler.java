@@ -8,9 +8,17 @@ import com.github.duke605.dce.lib.Reference;
 import com.github.duke605.dce.util.ConcurrentUtil;
 import com.github.duke605.dce.util.MCHelper;
 import com.mojang.realmsclient.gui.ChatFormatting;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.hooks.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiGameOver;
@@ -21,14 +29,6 @@ import net.minecraft.util.ScreenShotHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.json.JSONObject;
 
 import java.awt.image.BufferedImage;
@@ -46,7 +46,7 @@ public class MinecraftEventHandler
     private long lastTyping = 0;
     public static Queue<Map.Entry<Future<BufferedImage>, Consumer<BufferedImage>>> queue = new ArrayDeque<>();
 
-     @SubscribeEvent
+    @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
     {
         if (e.isLocal)
@@ -119,10 +119,10 @@ public class MinecraftEventHandler
         User me = DiscordCE.client.getUserById(DiscordCE.client.getSelfInfo().getId());
 
         // Getting death message
-        String deathMessage = e.source.getDeathMessage(e.entityLiving).getUnformattedText();
+        String deathMessage = e.source.func_151519_b(e.entityLiving).getUnformattedText();
 
         // Replacing minecraft name with discord name
-        deathMessage = deathMessage.replaceAll(player.getDisplayNameString(), me.getAsMention());
+        deathMessage = deathMessage.replaceAll(player.getDisplayName(), me.getAsMention());
 
         // Sending death message
         DiscordCE.client.getTextChannelById(Preferences.i.usingChannel).sendMessageAsync(deathMessage, null);
@@ -149,7 +149,7 @@ public class MinecraftEventHandler
                     mc.displayWidth,
                     mc.displayHeight,
                     mc.getFramebuffer());
-            String fileName = new JSONObject(IChatComponent.Serializer.componentToJson(t)).getJSONArray("with")
+            String fileName = new JSONObject(IChatComponent.Serializer.func_150696_a(t)).getJSONArray("with")
                     .getJSONObject(0).getJSONObject("clickEvent").getString("value");
             File file = new File(fileName);
             TextChannel c = DiscordCE.client.getTextChannelById(Preferences.i.usingChannel);
@@ -184,7 +184,7 @@ public class MinecraftEventHandler
         // Getting unlocked ac
         String aString = me.getAsMention() +
                 " has just earned the achievement \"" +
-                e.achievement.getStatName().getUnformattedComponentText() + ".\"";
+                e.achievement.func_150951_e().getUnformattedTextForChat() + ".\"";
 
         // Sending death message
         DiscordCE.client.getTextChannelById(Preferences.i.usingChannel).sendMessageAsync(aString, null);

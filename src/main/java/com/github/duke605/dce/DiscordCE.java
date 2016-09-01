@@ -14,21 +14,17 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mixpanel.mixpanelapi.MixpanelAPI;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.dv8tion.jda.client.JDAClient;
 import net.dv8tion.jda.client.JDAClientBuilder;
 import net.dv8tion.jda.requests.Requester;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.json.JSONObject;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import javax.swing.*;
@@ -36,17 +32,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 @Mod(
         modid = Reference.MODID,
         name = Reference.NAME,
         version = Reference.VERSION,
-        clientSideOnly = true,
         guiFactory = "com.github.duke605.dce.gui.factory.GuiFactoryDiscordConfig"
 )
 public class DiscordCE
