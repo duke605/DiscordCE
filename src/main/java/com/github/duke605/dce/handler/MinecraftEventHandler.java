@@ -48,7 +48,7 @@ public class MinecraftEventHandler
     private long lastTyping = 0;
     public static int singlePlayerGames = 0;
     public static int multiplayerGames = 0;
-    public static Queue<Map.Entry<Future, Consumer>> queue = new ArrayDeque<>();
+    public static ConcurrentLinkedQueue<Map.Entry<Future, Consumer>> queue = new ConcurrentLinkedQueue<>();
 
      @SubscribeEvent
     public void onPlayerJoinServer(FMLNetworkEvent.ClientConnectedToServerEvent e)
@@ -208,6 +208,7 @@ public class MinecraftEventHandler
         // Telling player configs were changed
         MCHelper.sendMessage(TextFormatting.GRAY + "Configurations updated.");
     }
+ConcurrentLinkedQueue s;
 
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
