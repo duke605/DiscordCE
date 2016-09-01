@@ -4,6 +4,7 @@
 ![Previous](http://i.imgur.com/pFx9btG.png)
 -------------------------------------------
 
+- [1.10](https://github.com/duke605/DiscordCE/tree/1.10)
 - [1.8.9](https://github.com/duke605/DiscordCE/tree/1.8.9)
 
 ![commands](https://i.imgur.com/mYz3q6Q.png)
