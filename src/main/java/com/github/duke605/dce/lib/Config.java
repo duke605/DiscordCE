@@ -173,7 +173,7 @@ public class Config {
                             "Lets me know what version of forge I should focus my attention on.\n\t" +
                         "mc_version - The current version of Minecraft you are using.\n\t\t" +
                             "Lets me know what version of Minecarft i should focus my attention on.\n\t" +
-                        "timezone - What timezone you are in. \n\t\t" +
+                        "language - What language Minecarft is set to. \n\t\t" +
                             "Helps me prioritize what languages I should support.\n\t" +
                         "dce_version - The current version of DiscordCE you are using.\n\t\t" +
                             "Lets me know what version of DiscordCE I should focus my attention on.\n\t" +
