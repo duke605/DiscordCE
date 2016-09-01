@@ -5,6 +5,7 @@
 -------------------------------------------
 
 - [1.8.9](https://github.com/duke605/DiscordCE/tree/1.8.9)
+- [1.7/10](https://github.com/duke605/DiscordCE/tree/1.7.10)
 
 ![commands](https://i.imgur.com/mYz3q6Q.png)
 --------------------------------------------
