@@ -39,7 +39,6 @@ import java.util.TimeZone;
 
 public class DiscordEventHandler extends CustomListenerAdapter {
 
-
     @Override
     public void onReady(ReadyEvent e)
     {
