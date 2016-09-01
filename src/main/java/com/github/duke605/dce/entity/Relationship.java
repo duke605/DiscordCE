@@ -19,8 +19,18 @@ public class Relationship
     public Relationship(JSONObject obj) {
         type = obj.getInt("type");
         id = obj.getString("id");
+        long time = System.currentTimeMillis();
 
-        user = DiscordCE.client.getUserById(obj.getJSONObject("user").getString("id"));
+        // Looping until user can be found
+        do
+        {
+            user = DiscordCE.client.getUserById(obj.getJSONObject("user").getString("id"));
+
+            // Breaking if could not find user in 30 seconds
+            if (time > System.currentTimeMillis() - 30000)
+                break;
+        }
+        while (user == null);
 
         // Checking if the user was found
         if (user == null)
