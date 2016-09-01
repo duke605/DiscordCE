@@ -222,7 +222,10 @@ public class MinecraftEventHandler
 
         // Checking if task is done
         if (!future.isDone())
+        {
             queue.add(entry);
+            return;
+        }
 
         try
         {
